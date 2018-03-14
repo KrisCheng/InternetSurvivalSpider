@@ -1,2 +1,4 @@
 # Spidergogogo
-a series small spider tasks (most for practice).
+
+a series of small but interesting spider tasks.
+
