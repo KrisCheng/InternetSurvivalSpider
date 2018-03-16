@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 '''
-Desc: a basic spider for Baidubaike, via urllib, based on Python3.
+Desc: a basic spider for Baidubaike, via urllib2, based on Python2.
 Author: Kris Peng
 Copyright (c) 2018 - Kris Peng <kris.dacpc@gmail.com>
 '''
