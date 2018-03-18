@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 '''
-Desc: a basic spider for Baidubaike, via urllib2, based on Python2.
+Desc: a basic spider for get urls from Baidubaike, based on Python3.
 Author: Kris Peng
 Copyright (c) 2018 - Kris Peng <kris.dacpc@gmail.com>
 '''
@@ -21,7 +21,9 @@ class SpiderMain(object):
         self.urls.add_new_url(root_url)
         while self.urls.has_new_url():
             try:
+                # get url
                 new_url = self.urls.get_new_url()
+                # save url content and save
                 html_cont = self.downloader.download(new_url)
                 new_urls, new_data = self.parser.parse(new_url, html_cont)
                 self.urls.add_new_urls(new_urls)
@@ -30,13 +32,13 @@ class SpiderMain(object):
                 if count == 10:
                     break
                 count = count + 1
-
             except:
                 print("craw failed!!!")
 
         self.output.output_html()
 
 if __name__ == "__main__":
+    # entrance, the item of "Python".
     root_url = "https://baike.baidu.com/item/Python/407313"
     obj_spider = SpiderMain()
     obj_spider.craw(root_url)
