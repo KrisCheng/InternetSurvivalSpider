@@ -47,18 +47,6 @@ class Parse:
         解析信息
         '''
         info = []
-        for position in self.json['content']['positionResult']['result']:
-            i = {}
-            i['companyName'] = position['companyFullName']
-            i['companyDistrict'] = position['district']
-            i['companyLabel'] = position['companyLabelList']
-            i['companySize'] = position['companySize']
-            i['companyStage'] = position['financeStage']
-            i['companyType'] = position['industryField']
-            i['positionType'] = position['firstType']
-            i['positionEducation'] = position['education']
-            i['positionAdvantage'] = position['positionAdvantage']
-            i['positionSalary'] = position['salary']
-            i['positionWorkYear'] = position['workYear']
-            info.append(i)
+        for key in self.json['content']['positionResult']['result']:
+            info.append(key)
         return info

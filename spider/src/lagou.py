@@ -11,10 +11,11 @@ import time
 import logging
 import codecs
 
-logging.basicConfig(level=logging.ERROR,
-                    format='%(asctime)s Process%(process)d:%(thread)d %(message)s',
+# log file
+logging.basicConfig(level=logging.INFO,
+                    format='%(asctime)s - Process - %(process)d : %(thread)d %(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S',
-                    filename='diary.log',
+                    filename='lagou_diary.log',
                     filemode='a')
 
 
@@ -27,8 +28,8 @@ def getInfo(url, para):
     generalParse = Parse(htmlCode)
     pageCount = generalParse.parsePage()
     info = []
-    for i in range(1, pageCount + 1):
-    # for i in range(1, 10):
+    # for i in range(1, pageCount + 1):
+    for i in range(1, 2):
         print('第%s页' % i)
         para['pn'] = str(i)
         htmlCode = generalHttp.post(url, para=para, headers=LAGOU_HEADERS, cookies=LAGOU_COOKIES)
@@ -50,24 +51,25 @@ def processInfo(info, para):
     """
     信息存储
     """
-    logging.error('Process start')
+    logging.info('Process start')
+
     try:
-        title = '公司名称\t公司类型\t融资阶段\t标签\t公司规模\t公司所在地\t职位类型\t学历要求\t福利\t薪资\t工作经验\n'
-        file = codecs.open('%s职位.xls' % para['city'], 'w', 'utf-8')
+        file = codecs.open('%s_职位.xls' % para['city'], 'w', 'utf-8')
+
+        title = '公司城市 \t 公司名称 \t 公司类型 \t 融资阶段 \t 标签 \t 公司规模 \t 公司所在地 \t 职位类型 \t 学历要求 \t 福利 \t 薪资 \t 工作经验 \n'
         file.write(title)
         for p in info:
-            line = str(p['companyName']) + '\t' + str(p['companyType']) + '\t' + str(p['companyStage']) + '\t' + \
-                   str(p['companyLabel']) + '\t' + str(p['companySize']) + '\t' + str(p['companyDistrict']) + '\t' + \
-                   str(p['positionType']) + '\t' + str(p['positionEducation']) + '\t' + str(
-                p['positionAdvantage']) + '\t' + \
-                   str(p['positionSalary']) + '\t' + str(p['positionWorkYear']) + '\n'
+            line = str(p['city']) + '\t' + str(p['companyFullName']) + '\t' + str(p['industryField']) + '\t' + str(p['financeStage']) + '\t' + \
+                   str(p['companyLabelList']) + '\t' + str(p['companySize']) + '\t' + str(p['district']) + '\t' + \
+                   str(p['firstType']) + '\t' + str(p['education']) + '\t' + str(p['positionAdvantage']) + '\t' + \
+                   str(p['salary']) + '\t' + str(p['workYear']) + '\n'
             file.write(line)
         file.close()
         return True
-    except Exception as e:
-        print(e)
-        return None
 
+    except Exception as e:
+        print(str(e) + " not exist.")
+        return False
 
 def main(url, para):
     """
@@ -82,17 +84,17 @@ def main(url, para):
         return None
 
 def main_task():
-    kdList = [u'算法']
-    cityList = [u'广州', u'深圳']
+    kdList = [u'算法工程师']
+    cityList = [u'上海']
     url = 'https://www.lagou.com/jobs/positionAjax.json'
     for city in cityList:
-        print('爬取%s' % city)
+        print('爬取 %s' % city)
         para = {'first': 'true', 'pn': '1', 'kd': kdList[0], 'city': city}
         flag = main(url, para)
         if flag:
-            print('%s爬取成功' % city)
+            print('%s 爬取成功' % city)
         else:
-            print('%s爬取失败' % city)
+            print('%s 爬取失败' % city)
 
 
     
