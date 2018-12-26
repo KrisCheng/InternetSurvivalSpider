@@ -43,17 +43,34 @@ def processInfo(info, para):
 
     try:
         file = codecs.open('%s_%s.xlsx' % (para['city'], para['kd']), 'w', 'utf-8')
-        title = ''
-        for key in info[0].keys():
-            title = title + '\t' + str(key)
-        title = title + '\n'
+        title = 'city' + '\t' + 'companyFullName' + '\t' + 'companyShortName' + '\t' + 'companyLabelList' + '\t' + 'companySize' + '\t' + \
+                'district' + '\t' + 'education' + '\t' + 'salary' + '\t'  + 'workYear' + '\t' + 'jobNature' + '\t' + 'firstType' + '\t' + 'secondType' + '\t' + 'thirdType' + '\t' + \
+                'financeStage' + '\t' + 'hitags' + '\t' + 'industryField' + '\t' + 'industryLables' + '\t' + \
+                'positionAdvantage' + '\t' + 'positionLables' + '\t' + 'stationname' + '\t' + 'subwayline' + '\n'
         file.write(title)
-        for p in info:
-            line = ''
-            for value in p.values():
-                line = line + '\t' + str(value)
-            line = line + '\n'
-            file.write(line)
+        for result in info:
+            item = str(result['city']) + '\t' + \
+            str(result['companyFullName']) + '\t' + \
+            str(result['companyShortName']) + '\t' + \
+            str(result['companyLabelList']) + '\t' + \
+            str(result['companySize']) + '\t' + \
+            str(result['district']) + '\t' + \
+            str(result['education']) + '\t' + \
+            str(result['salary']) + '\t' + \
+            str(result['workYear']) + '\t' + \
+            str(result['jobNature']) + '\t' + \
+            str(result['firstType']) + '\t' + \
+            str(result['secondType']) + '\t' + \
+            str(result['thirdType']) + '\t' + \
+            str(result['financeStage']) + '\t' + \
+            str(result['hitags']) + '\t' + \
+            str(result['industryField']) + '\t' + \
+            str(result['industryLables']) + '\t' + \
+            str(result['positionAdvantage']) + '\t' + \
+            str(result['positionLables']) + '\t' + \
+            str(result['stationname']) + '\t' + \
+            str(result['subwayline']) + '\n'
+            file.write(item)
         file.close()
         return True
 
@@ -71,7 +88,7 @@ def main(url, para):
         return None
 
 def main_task():
-    kdList = [u'算法工程师', u'前端工程师', u'后端工程师', u"深度学习", u"产品经理", u"全栈工程师"]
+    kdList = [u'算法工程师', u'机器学习算法', u'前端工程师', u'后端工程师', u"深度学习", u"产品经理", u"全栈工程师"]
     cityList = [u'上海']
     url = 'https://www.lagou.com/jobs/positionAjax.json'
     for city in cityList:

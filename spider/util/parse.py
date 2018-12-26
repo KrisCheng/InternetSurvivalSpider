@@ -29,7 +29,7 @@ class Parse:
         return content
 
     def parsePage(self):
-        # 解析并计算页面数量 :return: 页面数量
+        # 解析并计算页面数量, 返回页面数量
         totalCount = self.json['content']['positionResult']['totalCount']  # 职位总数量
         print ("Total Positions: ", totalCount)
         resultSize = self.json['content']['positionResult']['resultSize']  # 每一页显示的数量
@@ -38,8 +38,30 @@ class Parse:
         return pageCount
 
     def parseInfo(self):
-        # 解析信息
+        # 解析信息，提取必要的字段
         info = []
         for result in self.json['content']['positionResult']['result']:
-            info.append(result)
+            dict = {}
+            dict["city"] = result['city']
+            dict["companyFullName"] = result['companyFullName']
+            dict["companyShortName"] = result['companyShortName']
+            dict["companyLabelList"] = result['companyLabelList']
+            dict["companySize"] = result['companySize']
+            dict["district"] = result['district']
+            dict["education"] = result['education']
+            dict["salary"] = result['salary']
+            dict["workYear"] = result['workYear']
+            dict["jobNature"] = result['jobNature']
+            dict["firstType"] = result['firstType']
+            dict["secondType"] = result['secondType']
+            dict["thirdType"] = result['thirdType']
+            dict["financeStage"] = result['financeStage']
+            dict["hitags"] = result['hitags']
+            dict["industryField"] = result['industryField']
+            dict["industryLables"] = result['industryLables']
+            dict["positionAdvantage"] = result['positionAdvantage']
+            dict["positionLables"] = result['positionLables']
+            dict["stationname"] = result['stationname']
+            dict["subwayline"] = result['subwayline']
+            info.append(dict)
         return info
