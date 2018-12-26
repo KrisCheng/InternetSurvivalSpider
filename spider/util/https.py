@@ -14,10 +14,8 @@ logging.basicConfig(level=logging.ERROR,
                     filename='lagou_diary.log',
                     filemode='a')
 
+# http请求相关的操作
 class Http:
-    '''
-    http请求相关的操作
-    '''
     def __init__(self):
         pass
 

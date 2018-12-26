@@ -8,9 +8,16 @@ a spider project for analysis of Internet related jobs, providing a comprehensiv
 
 TBD
 
+#### TODO
+
+- [x] Lagou Spider
+- [ ] Data ETL  
+
+
 #### Reports
 
 TBD
+
 
 
 #### References

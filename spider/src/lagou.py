@@ -5,8 +5,7 @@
 
 from util.https import Http
 from util.parse import Parse
-from config.config import LAGOU_HEADERS
-from config.config import LAGOU_COOKIES
+from config.config import LAGOU_HEADERS, LAGOU_COOKIES
 import time
 import logging
 import codecs
@@ -20,49 +19,40 @@ logging.basicConfig(level=logging.INFO,
 
 
 def getInfo(url, para):
-    """
-    获取信息
-    """
     generalHttp = Http()
     htmlCode = generalHttp.post(url, para=para, headers=LAGOU_HEADERS, cookies=LAGOU_COOKIES)
     generalParse = Parse(htmlCode)
     pageCount = generalParse.parsePage()
     info = []
-    # for i in range(1, pageCount + 1):
-    for i in range(1, 2):
-        print('第%s页' % i)
+    for i in range(1, pageCount + 1):
+        print('Page: %s' % i)
         para['pn'] = str(i)
         htmlCode = generalHttp.post(url, para=para, headers=LAGOU_HEADERS, cookies=LAGOU_COOKIES)
         generalParse = Parse(htmlCode)
         info = info + getInfoDetail(generalParse)
-        time.sleep(2)
+        time.sleep(5)
     return info
 
 
 def getInfoDetail(generalParse):
-    """
-    信息解析
-    """
     info = generalParse.parseInfo()
     return info
 
-
 def processInfo(info, para):
-    """
-    信息存储
-    """
     logging.info('Process start')
 
     try:
-        file = codecs.open('%s_职位.xls' % para['city'], 'w', 'utf-8')
-
-        title = '公司城市 \t 公司名称 \t 公司类型 \t 融资阶段 \t 标签 \t 公司规模 \t 公司所在地 \t 职位类型 \t 学历要求 \t 福利 \t 薪资 \t 工作经验 \n'
+        file = codecs.open('%s_%s.xlsx' % (para['city'], para['kd']), 'w', 'utf-8')
+        title = ''
+        for key in info[0].keys():
+            title = title + '\t' + str(key)
+        title = title + '\n'
         file.write(title)
         for p in info:
-            line = str(p['city']) + '\t' + str(p['companyFullName']) + '\t' + str(p['industryField']) + '\t' + str(p['financeStage']) + '\t' + \
-                   str(p['companyLabelList']) + '\t' + str(p['companySize']) + '\t' + str(p['district']) + '\t' + \
-                   str(p['firstType']) + '\t' + str(p['education']) + '\t' + str(p['positionAdvantage']) + '\t' + \
-                   str(p['salary']) + '\t' + str(p['workYear']) + '\n'
+            line = ''
+            for value in p.values():
+                line = line + '\t' + str(value)
+            line = line + '\n'
             file.write(line)
         file.close()
         return True
@@ -72,9 +62,6 @@ def processInfo(info, para):
         return False
 
 def main(url, para):
-    """
-    主函数逻辑
-    """
     logging.error('Main start')
     if url:
         info = getInfo(url, para)  # 获取信息
@@ -84,18 +71,15 @@ def main(url, para):
         return None
 
 def main_task():
-    kdList = [u'算法工程师']
+    kdList = [u'算法工程师', u'前端工程师', u'后端工程师', u"深度学习", u"产品经理", u"全栈工程师"]
     cityList = [u'上海']
     url = 'https://www.lagou.com/jobs/positionAjax.json'
     for city in cityList:
-        print('爬取 %s' % city)
-        para = {'first': 'true', 'pn': '1', 'kd': kdList[0], 'city': city}
-        flag = main(url, para)
-        if flag:
-            print('%s 爬取成功' % city)
-        else:
-            print('%s 爬取失败' % city)
-
-
-    
-    
+        print('Crawling: %s' % city)
+        for pos in kdList:
+            para = {'first': 'true', 'pn': '1', 'kd': pos, 'city': city}
+            flag = main(url, para)
+            if flag:
+                print('%s_%s Crawling Success' % (city, pos))
+            else:
+                print('%s_%s Crawling Fail' % (city, pos))
