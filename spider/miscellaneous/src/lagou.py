@@ -10,13 +10,14 @@ import time
 import logging
 import codecs
 
+SLEEP_TIME = 3
+
 # log file
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s - Process - %(process)d : %(thread)d %(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S',
                     filename='lagou_diary.log',
                     filemode='a')
-
 
 def getInfo(url, para):
     generalHttp = Http()
@@ -30,9 +31,8 @@ def getInfo(url, para):
         htmlCode = generalHttp.post(url, para=para, headers=LAGOU_HEADERS, cookies=LAGOU_COOKIES)
         generalParse = Parse(htmlCode)
         info = info + getInfoDetail(generalParse)
-        time.sleep(5)
+        time.sleep(SLEEP_TIME)
     return info
-
 
 def getInfoDetail(generalParse):
     info = generalParse.parseInfo()
@@ -88,7 +88,8 @@ def main(url, para):
         return None
 
 def main_task():
-    kdList = [u'算法工程师', u'机器学习算法', u'前端工程师', u'后端工程师', u"深度学习", u"产品经理", u"全栈工程师"]
+    kdList = [u'机器学习算法', u"深度学习", u'前端工程师', u'后端工程师', u"全栈工程师", u"架构师", u"产品经理"]
+    # kdList = [u'算法工程师']
     cityList = [u'上海']
     url = 'https://www.lagou.com/jobs/positionAjax.json'
     for city in cityList:

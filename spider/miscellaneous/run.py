@@ -4,10 +4,10 @@
 # Created on 23/12/2018
 
 from config.config import *
-from src import lagou
-from src import wanfang
+from src import lagou, jobbole, wanfang
 
 if __name__ == '__main__':
 
-    lagou.main_task()
+    # lagou.main_task()
+    jobbole.main_task()
     # wanfang.main_task()
