@@ -16,7 +16,8 @@ def get_md5(url):
 
 
 def extract_num(text):
-    #从字符串中提取出数字
+
+    # 从字符串中提取出数字
     match_re = re.match(".*?(\d+).*", text)
     if match_re:
         nums = int(match_re.group(1))

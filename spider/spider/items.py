@@ -3,18 +3,9 @@
 # Author: kris_peng
 # Created on 27/12/2018
 
-# Define here the models for your scraped items
-#
-# See documentation in:
-# https://doc.scrapy.org/en/latest/topics/items.html
-
 import scrapy
 import re
-import requests
 import datetime
-from PIL import Image
-from io import BytesIO
-from settings import IMAGES_STORE
 from scrapy.loader.processors import MapCompose, TakeFirst, Join
 
 
@@ -45,19 +36,7 @@ def get_nums(value):
 
     return nums
 
-class SpiderItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
-
 class JobBoleArticleItem(scrapy.Item):
-
-    @staticmethod
-    def save_img(img_url):
-        response = requests.get(img_url)
-        image = Image.open(BytesIO(response.content))
-        img_path = str(IMAGES_STORE + img_url[-10:]).strip()
-        image.save(img_path)
 
     title = scrapy.Field()
     create_date = scrapy.Field(
