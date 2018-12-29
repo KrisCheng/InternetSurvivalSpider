@@ -7,9 +7,9 @@ a spider project for analysis of Internet related jobs, providing a comprehensiv
 [In Chinese] 一个 互联网工作岗位 + 相关学习资源 推荐的搜索引擎。
 
 
-#### Usage
+### Usage
 
-* Create virtual environment
+* create virtual environment
 
 ```shell
 virtualenv spider_venv
@@ -34,8 +34,7 @@ deactivate
 ```
 
 
-
-#### Catalog
+### Catalog
 
 ```
 .
@@ -49,7 +48,7 @@ deactivate
 ```
 
 
-#### TODO
+### TODO
 
 - [ ] Jobbole Spider
 - [ ] Lagou Spider
@@ -57,11 +56,11 @@ deactivate
 - [ ] Data Analysis && ETL
 
 
-#### Reports
+### Reports
 
 TBD
 
-#### References
+### References
 
 * [LagouSpider](https://github.com/nnngu/LagouSpider)
 * [LagouJob](https://github.com/lucasxlu/LagouJob)
