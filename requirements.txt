@@ -1,0 +1,8 @@
+numpy
+PyMySQL
+six
+SQLAlchemy
+scrapy
+mysqlclient
+mysql-connector
+mysql

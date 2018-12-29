@@ -66,6 +66,7 @@ class JobboleSpider(scrapy.Spider):
         # tags = ",".join(tag_list)
 
         # 通过css选择器提取字段
+
         front_image_url = response.meta.get("front_image_url", "")  # 文章封面图
         title = response.css(".entry-header h1::text").extract()[0]
         create_date = response.css("p.entry-meta-hide-on-mobile::text").extract()[0].strip().replace("·","").strip()
