@@ -49,6 +49,8 @@ class SpiderPipeline(object):
 #         self.exporter.export_item(item)
 #         return item
 
+# 同步写入
+
 class MySQLExporterPipleline(object):
 
     def __init__(self):
@@ -60,9 +62,16 @@ class MySQLExporterPipleline(object):
         DBSession = sessionmaker(bind=engine)
         session = DBSession()
         try:
+            print("CTEESAADA: ", item["create_date"] )
             data_result = JobboleArticle(
                 title = item["title"],
-                tags = item["tags"])
+                content=item["content"],
+                create_date=item["create_date"],
+                url=item["url"],
+                tags=item["tags"],
+                fav_nums=item["fav_nums"],
+                praise_nums=item["praise_nums"],
+                comment_nums=item["comment_nums"])
             session.add(data_result)
         except:
             print("ERROR.")

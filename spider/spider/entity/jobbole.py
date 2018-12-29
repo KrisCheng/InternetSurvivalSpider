@@ -15,8 +15,20 @@ class JobboleArticle(Base):
 
     id = Column(Integer, primary_key=True)
     title = Column(String)
+    content = Column(String)
+    url = Column(String)
+    create_date = Column(DateTime)
     tags = Column(String)
+    fav_nums = Column(String)
+    praise_nums = Column(String)
+    comment_nums = Column(String)
 
-    def __init__(self, title, tags):
+    def __init__(self, title, content, url, create_date, tags, fav_nums, praise_nums, comment_nums):
         self.title = title
+        self.content = content
+        self.url = url
+        self.create_date = create_date
         self.tags = tags
+        self.fav_nums = fav_nums
+        self.praise_nums = praise_nums
+        self.comment_nums = comment_nums

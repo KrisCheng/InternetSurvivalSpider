@@ -7,6 +7,7 @@ import scrapy
 import re
 import datetime
 from scrapy.loader.processors import MapCompose, TakeFirst, Join
+from scrapy.loader import ItemLoader
 
 
 def date_convert(value):
@@ -62,3 +63,8 @@ class JobBoleArticleItem(scrapy.Item):
         output_processor=Join(",")
     )
     content = scrapy.Field()
+
+class ArticleItemLoader(ItemLoader):
+
+    # 自定义itemloader
+    default_output_processor = TakeFirst()
