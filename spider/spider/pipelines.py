@@ -62,7 +62,6 @@ class MySQLExporterPipleline(object):
         DBSession = sessionmaker(bind=engine)
         session = DBSession()
         try:
-            print("CTEESAADA: ", item["create_date"] )
             data_result = JobboleArticle(
                 title = item["title"],
                 content=item["content"],

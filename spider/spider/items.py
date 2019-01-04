@@ -10,23 +10,29 @@ from scrapy.loader.processors import MapCompose, TakeFirst, Join
 from scrapy.loader import ItemLoader
 
 
+# 日期特殊处理 YYYY/MM/DD
 def date_convert(value):
     try:
+        date_match = re.match("\d{4}/\d{2}/\d{2}", value.strip())
+        value = date_match.group()
         create_date = datetime.datetime.strptime(value, "%Y/%m/%d").date()
     except Exception as e:
         create_date = datetime.datetime.now().date()
-
     return create_date
+
 
 def return_value(value):
     return value
 
+
 def remove_comment_tags(value):
+
     # 去掉tag中提取的评论
     if "评论" in value:
         return ""
     else:
         return value
+
 
 def get_nums(value):
     match_re = re.match(".*?(\d+).*", value)
@@ -37,11 +43,14 @@ def get_nums(value):
 
     return nums
 
+
 class JobBoleArticleItem(scrapy.Item):
 
     title = scrapy.Field()
+
+    # MapCompose 用于预处理
     create_date = scrapy.Field(
-        input_processor=MapCompose(date_convert),
+        input_processor=MapCompose(date_convert)
     )
     url = scrapy.Field()
     url_object_id = scrapy.Field()
@@ -66,5 +75,5 @@ class JobBoleArticleItem(scrapy.Item):
 
 class ArticleItemLoader(ItemLoader):
 
-    # 自定义itemloader
+    # 自定义itemloader, 仅取第一个
     default_output_processor = TakeFirst()
