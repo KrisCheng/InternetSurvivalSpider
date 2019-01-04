@@ -47,7 +47,6 @@ def get_nums(value):
 class JobBoleArticleItem(scrapy.Item):
 
     title = scrapy.Field()
-
     # MapCompose 用于预处理
     create_date = scrapy.Field(
         input_processor=MapCompose(date_convert)
@@ -73,7 +72,21 @@ class JobBoleArticleItem(scrapy.Item):
     )
     content = scrapy.Field()
 
-class ArticleItemLoader(ItemLoader):
+class ZhihuQuestionItem(scrapy.Item):
 
+    #知乎的问题 item
+    zhihu_id = scrapy.Field()
+    topics = scrapy.Field()
+    url = scrapy.Field()
+    title = scrapy.Field()
+    content = scrapy.Field()
+    answer_num = scrapy.Field()
+    comments_num = scrapy.Field()
+    watch_user_num = scrapy.Field()
+    click_num = scrapy.Field()
+    crawl_time = scrapy.Field()
+
+
+class ArticleItemLoader(ItemLoader):
     # 自定义itemloader, 仅取第一个
     default_output_processor = TakeFirst()
