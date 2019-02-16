@@ -3,42 +3,32 @@
 # Author: kris_peng
 # Created on 23/12/2018
 
+# JOB_LIST_DONE = ["CTO","技术总监","算法工程师","数据挖掘","自然语言处理","区块链","后端工程师"]
+JOB_LIST_TODO = ["产品总监"]
+
 MYSQL_DATABASE_URI = "mysql+pymysql://root:pengcheng00@localhost:3306/spider?charset=utf8" 
 
 
 LAGOU_HEADERS = {
-    'Host': 'www.lagou.com',
-    'Connection': 'keep-alive',
-    'Content-Length': '23',
-    'Origin': 'https://www.lagou.com',
-    'X-Anit-Forge-Code': '0',
-    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36',
-    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-    'Accept': 'application/json, text/javascript, */*; q=0.01',
-    'X-Requested-With': 'XMLHttpRequest',
-    'X-Anit-Forge-Token': 'None',
-    'Referer': 'https://www.lagou.com/jobs/list_java?city=%E5%B9%BF%E5%B7%9E&cl=false&fromSearch=true&labelWords=&suginput=',
+    'Accept': 'application/json',
     'Accept-Encoding': 'gzip, deflate, br',
-    'Accept-Language': 'en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7'
+    'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
+    'Host': 'm.lagou.com',
+    'DNT': '1',
+    'Referer': 'https://m.lagou.com/search.html',
+    'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1',
+    'X-Requested-With': 'XMLHttpRequest',
+    'Connection': 'keep-alive',
+    'Referrer Policy': 'no-referrer-when-downgrade'
 }
 
 # cookies
 LAGOU_COOKIES = {
-    'user_trace_token': '20171011085044-36afc724-ae1e-11e7-947d-5254005c3644',
-    'LGUID': '20171011085044-36afc9e6-ae1e-11e7-947d-5254005c3644',
-    '_ga': 'GA1.2.1411877279.1507683044',
-    'index_location_city': '%E5%B9%BF%E5%B7%9E',
-    'JSESSIONID': 'ABAAABAAADEAAFI2466B2149D4B3E406932CAEA37FDF471',
-    '_gid': 'GA1.2.1604143331.1517585155',
-    'Hm_lvt_4233e74dff0ae5bd0a3d81c6ccf756e6': '1515000882,1515252738,1516984463,1517585156',
-    'LGSID': '20180202232556-5ce93c91-082d-11e8-abfa-5254005c3644', 'PRE_UTM': '',
-    'PRE_HOST': '',
-    'PRE_SITE': '',
-    'PRE_LAND': 'https%3A%2F%2Fwww.lagou.com%2F',
-    'TG-TRACK-CODE': 'index_navigation',
-    'Hm_lpvt_4233e74dff0ae5bd0a3d81c6ccf756e6': '1517585322',
-    'LGRID': '20180202232842-c0095589-082d-11e8-abfa-5254005c3644',
-    'SEARCH_ID': '0a887843a48a49c7bb6dae915dabdcc1'
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+    'Host': 'm.lagou.com',
+    'Referer': 'https://m.lagou.com',
+    'Upgrade-Insecure-Requests': '1',
+    'User-Agent': 'Mozilla/5.0 (iPad; CPU OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'
 }
 
 # IP
