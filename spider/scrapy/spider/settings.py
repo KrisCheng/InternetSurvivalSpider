@@ -39,10 +39,23 @@ ROBOTSTXT_OBEY = False
 
 # Disable cookies (enabled by default)
 COOKIES_ENABLED = True
+ROBOTSTXT_OBEY = False #不遵守Robot协议
+DOWNLOAD_DELAY = 3 #延迟
 
 HEADERS = {
-	'Connection': 'keep-alive',
-	'User-Agent': 'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.78 Safari/537.36'
+    'Host': 'www.lagou.com',
+    'Connection': 'keep-alive',
+    'Content-Length': '23',
+    'Origin': 'https://www.lagou.com',
+    'X-Anit-Forge-Code': '0',
+    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36',
+    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+    'Accept': 'application/json, text/javascript, */*; q=0.01',
+    'X-Requested-With': 'XMLHttpRequest',
+    'X-Anit-Forge-Token': 'None',
+    'Referer': 'https://www.lagou.com/jobs/list_java?city=%E5%B9%BF%E5%B7%9E&cl=false&fromSearch=true&labelWords=&suginput=',
+    'Accept-Encoding': 'gzip, deflate, br',
+    'Accept-Language': 'en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7'
 }
 
 # cookies
@@ -62,6 +75,11 @@ COOKIES = {
     'Hm_lpvt_4233e74dff0ae5bd0a3d81c6ccf756e6': '1517585322',
     'LGRID': '20180202232842-c0095589-082d-11e8-abfa-5254005c3644',
     'SEARCH_ID': '0a887843a48a49c7bb6dae915dabdcc1'
+}
+
+META = {
+	'dont_redirect': True,
+	'handle_httpstatus_list': [301, 302]
 }
 
 # Disable Telnet Console (enabled by default)

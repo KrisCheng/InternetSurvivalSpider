@@ -8,6 +8,6 @@ from src import lagou, jobbole, wanfang
 
 if __name__ == '__main__':
 
-    # lagou.main_task()
-    jobbole.main_task()
+    lagou.main_task()
+    # jobbole.main_task()
     # wanfang.main_task()
