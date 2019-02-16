@@ -5,6 +5,7 @@
 
 MYSQL_DATABASE_URI = "mysql+pymysql://root:pengcheng00@localhost:3306/spider?charset=utf8" 
 
+
 LAGOU_HEADERS = {
     'Host': 'www.lagou.com',
     'Connection': 'keep-alive',

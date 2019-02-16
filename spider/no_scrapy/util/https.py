@@ -5,16 +5,9 @@
 
 from config.config import IP, UA
 import requests, random
-import logging
-
-# 记录爬取日志
-logging.basicConfig(level=logging.ERROR,
-                    format='%(asctime)s Process%(process)d:%(thread)d %(message)s',
-                    datefmt='%Y-%m-%d %H:%M:%S',
-                    filename='lagou_diary.log',
-                    filemode='a')
 
 # http请求相关的操作
+
 class Http:
     def __init__(self):
         pass
@@ -31,9 +24,7 @@ class Http:
         return: 源码
         '''
         if not url:
-            logging.error('GetError url not exit')
             return 'None'
-        logging.error('Get %s' % url)
         try:
             if not headers: headers = {'User-Agent': UA[random.randint(0, len(UA) - 1)]}
 
@@ -42,13 +33,10 @@ class Http:
                 htmlCode = response.text
             else:
                 htmlCode = 'None'
-            logging.error('Get %s %s' % (str(response.status_code), url))
         except Exception as e:
-            logging.error('GetExcept %s' % str(e))
             if timeOutRetry > 0:
                 htmlCode = self.get(url=url, timeOutRetry=(timeOutRetry - 1))
             else:
-                logging.error('GetTimeOut %s' % url)
                 htmlCode = 'None'
         return htmlCode
 
@@ -66,9 +54,7 @@ class Http:
         '''
 
         if not url or not para:
-            logging.error('PostError url or para not exit')
             return None
-        logging.error('Post %s' % url)
 
         try:
             if not headers:
@@ -80,13 +66,10 @@ class Http:
 
             else:
                 htmlCode = None
-            logging.error('Post %s %s' % (str(response.status_code), url))
 
         except Exception as e:
-            logging.error('PostExcept %s' % str(e))
             if timeOutRetry > 0:
                 htmlCode = self.post(url=url, para=para, timeOutRetry=(timeOutRetry - 1))
             else:
-                logging.error('PostTimeOut %s' % url)
                 htmlCode = None
         return htmlCode

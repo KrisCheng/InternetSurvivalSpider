@@ -4,8 +4,6 @@
 # Created on 27/12/2018
 
 import scrapy
-import re
-import datetime
 from scrapy.http import Request
 from urllib import parse
 from spider.items import JobBoleArticleItem, ArticleItemLoader
@@ -44,9 +42,8 @@ class JobboleSpider(scrapy.Spider):
 
     def parse_detail(self, response):
 
-        article_item = JobBoleArticleItem()
-
         # # 1.通过XPath提取字段
+        # article_item = JobBoleArticleItem()
         #
         # title = response.xpath('//div[@class="entry-header"]/h1/text()').extract_first("")
         # create_date = response.xpath("//p[@class='entry-meta-hide-on-mobile']/text()").extract()[0].strip().replace("·","").strip()

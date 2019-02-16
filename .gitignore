@@ -2,5 +2,5 @@
 *.iml
 *.xlsx
 *.log
+chromedriver
 *.xml
-sql/

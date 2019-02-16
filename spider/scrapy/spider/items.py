@@ -9,7 +9,6 @@ import datetime
 from scrapy.loader.processors import MapCompose, TakeFirst, Join
 from scrapy.loader import ItemLoader
 
-
 # 日期特殊处理 YYYY/MM/DD
 
 def date_convert(value):
@@ -24,7 +23,6 @@ def date_convert(value):
 
 def return_value(value):
     return value
-
 
 def remove_comment_tags(value):
 
@@ -45,7 +43,7 @@ def get_nums(value):
 
     return nums
 
-
+# 伯乐在线文章
 class JobBoleArticleItem(scrapy.Item):
 
     title = scrapy.Field()
@@ -74,20 +72,26 @@ class JobBoleArticleItem(scrapy.Item):
     )
     content = scrapy.Field()
 
-class LagouJobItem(scrapy.Item):
-	company_fullname = scrapy.Field()
-	position_name = scrapy.Field()
-	salary = scrapy.Field()
-	work_year = scrapy.Field()
-	education = scrapy.Field()
-	city = scrapy.Field()
-	district = scrapy.Field()
-	finance_stage = scrapy.Field()
-	industry_field = scrapy.Field()
-	first_type = scrapy.Field()
-	position_lables = scrapy.Field()
-
 
 class ArticleItemLoader(ItemLoader):
     # 自定义itemloader, 仅取第一个
+    default_output_processor = TakeFirst()
+
+
+# 拉勾网职位
+class LagouJobItem(scrapy.Item):
+
+    company_fullname = scrapy.Field()
+    position_name = scrapy.Field()
+    salary = scrapy.Field()
+    work_years = scrapy.Field()
+    education = scrapy.Field()
+    city = scrapy.Field()
+    district = scrapy.Field()
+    finance_stage = scrapy.Field()
+    industry_field = scrapy.Field()
+    first_type = scrapy.Field()
+    position_labels = scrapy.Field()
+
+class LagouJobItemLoader(ItemLoader):
     default_output_processor = TakeFirst()

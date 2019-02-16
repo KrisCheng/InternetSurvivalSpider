@@ -7,17 +7,9 @@ from util.https import Http
 from util.parse import Parse
 from config.config import LAGOU_HEADERS, LAGOU_COOKIES
 import time
-import logging
 import codecs
 
-SLEEP_TIME = 3
-
-# log file
-logging.basicConfig(level=logging.INFO,
-                    format='%(asctime)s - Process - %(process)d : %(thread)d %(message)s',
-                    datefmt='%Y-%m-%d %H:%M:%S',
-                    filename='lagou_diary.log',
-                    filemode='a')
+SLEEP_TIME = 5
 
 def getInfo(url, para):
     generalHttp = Http()
@@ -39,8 +31,6 @@ def getInfoDetail(generalParse):
     return info
 
 def processInfo(info, para):
-    logging.info('Process start')
-
     try:
         file = codecs.open('%s_%s.xlsx' % (para['city'], para['kd']), 'w', 'utf-8')
         title = 'city' + '\t' + 'companyFullName' + '\t' + 'companyShortName' + '\t' + 'companyLabelList' + '\t' + 'companySize' + '\t' + \
@@ -79,7 +69,6 @@ def processInfo(info, para):
         return False
 
 def main(url, para):
-    logging.error('Main start')
     if url:
         info = getInfo(url, para)  # 获取信息
         flag = processInfo(info, para)  # 信息储存
@@ -88,8 +77,7 @@ def main(url, para):
         return None
 
 def main_task():
-    kdList = [u'机器学习算法', u"深度学习", u'前端工程师', u'后端工程师', u"全栈工程师", u"架构师", u"产品经理"]
-    # kdList = [u'算法工程师']
+    kdList = [u'java']
     cityList = [u'上海']
     url = 'https://www.lagou.com/jobs/positionAjax.json'
     for city in cityList:

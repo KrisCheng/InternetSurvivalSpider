@@ -9,4 +9,4 @@ if __name__ == "__main__":
 
     # execute(["scrapy", "crawl", "jobbole"])
     # execute(["scrapy", "crawl", "zhihu"])
-    execute(["scrapy", "crawl", "lagou"])
+    execute(["scrapy", "crawl", "lagou_v1"])

@@ -3,11 +3,9 @@
 # Author: kris_peng
 # Created on 23/12/2018
 
-from config.config import *
-from src import lagou, jobbole, wanfang
+from src import lagou, m_lagou
 
 if __name__ == '__main__':
 
-    lagou.main_task()
-    # jobbole.main_task()
-    # wanfang.main_task()
+    # lagou.main_task()
+    m_lagou.main_task()

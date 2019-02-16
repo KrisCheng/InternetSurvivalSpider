@@ -4,14 +4,13 @@
 # Created on 2019/2/15
 
 import scrapy
-import json
 from spider.items import LagouJobItem
 from bs4 import BeautifulSoup
 from scrapy.conf import settings
 
-class LagouSpider(scrapy.Spider):
+class LagouV1Spider(scrapy.Spider):
 
-    name = 'lagou'
+    name = 'lagou_v1'
     allowed_domains = ['www.lagou.com']
     start_urls = ['https://www.lagou.com']
 
@@ -35,6 +34,7 @@ class LagouSpider(scrapy.Spider):
         # 每次获取总页码
         page_num = soup.find("div", class_="page-number").find("span", class_="span totalNum").get_text(strip=True)
         self.totalPageCount = int(page_num)
+
         for li in body_ul:
             item = LagouJobItem()
             arg1 = li.find("div", class_="position").find("div", class_="p_top").find("em").get_text(strip=True)
@@ -46,13 +46,13 @@ class LagouSpider(scrapy.Spider):
             item['position_name'] = li.find("div", class_="position").find("div", class_="p_top").find("h3").get_text(
                 strip=True)
             item['salary'] = ((arg2 + "/").split('/')[0]).strip()
-            item['work_year'] = ((arg2 + "/").split('/')[1]).strip()
+            item['work_years'] = ((arg2 + "/").split('/')[1]).strip()
             item['education'] = ((arg2 + "/").split('/')[2]).strip()
             item['city'] = (arg1 + '·' + arg1).split('·')[0]
             item['district'] = (arg1 + '·' + arg1).split('·')[1]
             item['industry_field'] = ((arg3 + "/").split('/')[0]).strip()
             item['finance_stage'] = ((arg3 + "/").split('/')[1]).strip()
-            item['position_lables'] = arg4.strip('“').strip('”')
+            item['position_labels'] = arg4.strip('“').strip('”')
             item['first_type'] = li.find("div", class_="list_item_bot").find("div", class_="li_b_l").get_text(",",
                                                                                                              strip=True)
             yield item

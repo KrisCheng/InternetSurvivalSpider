@@ -95,14 +95,14 @@ class LagouPipleline(object):
                 company_fullname = item["company_fullname"],
                 position_name = item["position_name"],
                 salary = item["salary"],
-                work_year = item["work_year"],
+                work_years = item["work_years"],
                 education = item["education"],
                 city = item["city"],
                 district = item["district"],
                 finance_stage = item["finance_stage"],
                 industry_field = item["industry_field"],
                 first_type = item["first_type"],
-                position_lables = item["position_lables"])
+                position_labels = item["position_labels"])
             session.add(data_result)
         except:
             print("Lagou Import ERROR.")
