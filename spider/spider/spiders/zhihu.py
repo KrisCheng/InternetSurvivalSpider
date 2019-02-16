@@ -3,6 +3,8 @@
 # Author: kris_peng
 # Created on 2019/1/4
 
+# TODO 之后再爬
+
 import re
 import json
 import datetime
@@ -10,8 +12,6 @@ from urllib import parse
 
 import scrapy
 from scrapy.loader import ItemLoader
-# from items import Zh  ihuQuestionItem, ZhihuAnswerItem
-
 
 class ZhihuSpider(scrapy.Spider):
     name = "zhihu"
@@ -50,7 +50,7 @@ class ZhihuSpider(scrapy.Spider):
         browser = webdriver.Chrome(executable_path="/Users/chengpeng/Desktop/workspace/my_project/Spidergogogo/spider/spider/spiders/chromedriver")
 
         browser.get("https://www.zhihu.com/signin")
-        browser.find_element_by_css_selector(".SignFlow-accountInput.Input-wrapper input").send_keys(
+        browser.find_element_by_css_selector(". .Input-wrapper input").send_keys(
             "15221381738")
         browser.find_element_by_css_selector(".SignFlow-password input").send_keys(
             "pengcheng00")
@@ -64,8 +64,7 @@ class ZhihuSpider(scrapy.Spider):
         import pickle
         for cookie in Cookies:
             # 写入文件
-            # 此处大家修改一下自己文件的所在路径
-            f = open('./spider/cookies/zhihu/' + cookie['name'] + '.zhihu', 'wb')
+            f = open('/Users/chengpeng/Desktop/workspace/my_project/Spidergogogo/spider/spider/cookies/zhihu/' + cookie['name'] + '.zhihu', 'wb')
             pickle.dump(cookie, f)
             f.close()
             cookie_dict[cookie['name']] = cookie['value']

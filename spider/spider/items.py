@@ -11,6 +11,7 @@ from scrapy.loader import ItemLoader
 
 
 # 日期特殊处理 YYYY/MM/DD
+
 def date_convert(value):
     try:
         date_match = re.match("\d{4}/\d{2}/\d{2}", value.strip())
@@ -28,6 +29,7 @@ def return_value(value):
 def remove_comment_tags(value):
 
     # 去掉tag中提取的评论
+
     if "评论" in value:
         return ""
     else:
@@ -72,19 +74,18 @@ class JobBoleArticleItem(scrapy.Item):
     )
     content = scrapy.Field()
 
-class ZhihuQuestionItem(scrapy.Item):
-
-    #知乎的问题 item
-    zhihu_id = scrapy.Field()
-    topics = scrapy.Field()
-    url = scrapy.Field()
-    title = scrapy.Field()
-    content = scrapy.Field()
-    answer_num = scrapy.Field()
-    comments_num = scrapy.Field()
-    watch_user_num = scrapy.Field()
-    click_num = scrapy.Field()
-    crawl_time = scrapy.Field()
+class LagouJobItem(scrapy.Item):
+	company_fullname = scrapy.Field()
+	position_name = scrapy.Field()
+	salary = scrapy.Field()
+	work_year = scrapy.Field()
+	education = scrapy.Field()
+	city = scrapy.Field()
+	district = scrapy.Field()
+	finance_stage = scrapy.Field()
+	industry_field = scrapy.Field()
+	first_type = scrapy.Field()
+	position_lables = scrapy.Field()
 
 
 class ArticleItemLoader(ItemLoader):
