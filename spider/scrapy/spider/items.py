@@ -8,6 +8,8 @@ import re
 import datetime
 from scrapy.loader.processors import MapCompose, TakeFirst, Join
 from scrapy.loader import ItemLoader
+from models.es_types import ArticleType
+
 
 # 日期特殊处理 YYYY/MM/DD
 
@@ -72,6 +74,19 @@ class JobBoleArticleItem(scrapy.Item):
     )
     content = scrapy.Field()
 
+    def save_to_es(self):
+
+        article = ArticleType()
+        article.title = self['title']
+        article.create_date = self['create_date']
+        article.content = self['content']
+        article.url = self['url']
+        article.tags = self['tags']
+        article.fav_nums = self['fav_nums']
+        article.praise_nums = self['praise_nums']
+        article.comment_nums = self['comment_nums']
+        article.save()
+
 
 class ArticleItemLoader(ItemLoader):
     # 自定义itemloader, 仅取第一个
@@ -95,3 +110,4 @@ class LagouJobItem(scrapy.Item):
 
 class LagouJobItemLoader(ItemLoader):
     default_output_processor = TakeFirst()
+

@@ -80,12 +80,13 @@ class JobbolePipleline(object):
             session.close()
             return item
 
+# TODO
 class LagouPipleline(object):
 
     def __init__(self):
         pass
 
-    def process_item(self, item, spider):
+    def process_item(self, item):
 
         engine = create_engine(MYSQL_DATABASE_URI)
         DBSession = sessionmaker(bind=engine)
@@ -110,3 +111,10 @@ class LagouPipleline(object):
             session.commit()
             session.close()
             return item
+
+class ElasticsearchPipeline(object):
+
+    def process_item(self, item, spider):
+        item.save_to_es()
+
+        return item

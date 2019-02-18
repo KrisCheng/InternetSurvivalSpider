@@ -53,7 +53,8 @@ def crawl_jobs(positionName):
             'Host': 'm.lagou.com',
             'DNT': '1',
             'Referer': 'https://m.lagou.com/search.html',
-            'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1',
+            'User-Agent': 'Mozilla/5.0 (iPad; CPU OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 '
+                      'Mobile/13B143 Safari/601.1',
             'X-Requested-With': 'XMLHttpRequest',
             'Connection': 'keep-alive',
             'Referrer Policy': 'no-referrer-when-downgrade',

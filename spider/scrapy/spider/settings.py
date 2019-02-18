@@ -25,7 +25,8 @@ ROBOTSTXT_OBEY = False #不遵守Robot协议
 
 ITEM_PIPELINES = {
    # 'spider.pipelines.JobbolePipleline': 1,
-   'spider.pipelines.LagouPipleline': 300,
+   # 'spider.pipelines.LagouPipleline': 300,
+   'spider.pipelines.ElasticsearchPipeline': 1,
 }
 
 IMAGES_URLS_FIELD = "front_image_url"
@@ -35,32 +36,6 @@ IMAGES_STORE = os.path.join(project_dir, 'images/')
 MYSQL_DATABASE_URI = "mysql+mysqlconnector://root:pengcheng00@localhost:3306/web_spider"
 
 BASE_DIR = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
-
-USER_AGENT = "Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.78 Safari/537.36"
-META = {
-	'dont_redirect': True,
-	'handle_httpstatus_list': [301, 302]
-}
-COOKIES = {
-	'user_trace_token': 'xxxxxxxxxxxxxxxxxxxxxxxxxx',
-	'LGUID': 'xxxxxxxxxxxxxxxxxxxxxxxxxx',
-	'sensorsdata2015jssdkcross': 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-	'_qddaz': 'QD.vr42sh.xxxxxxxxxxxxx.xxxxxxxxxxxxx',
-	'JSESSIONID': 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-	'_putrc': 'xxxxxxxxxxxxxxxxxxxxxxxxxx',
-	'login': 'true',
-	'unick': 'xxxxxxxxxxxxxxxxxxxxxxxxxx',
-	'showExpriedIndex': '1',
-	'showExpriedCompanyHome': '1',
-	'showExpriedMyPublish': '1',
-	'hasDeliver': '49',
-	'SEARCH_ID': 'xxxxxxxxxxxxxxxxxxxxxxxxxx',
-	'index_location_city': 'xxxxxxxxxxxxx',
-	'Hm_lvt_4233e74dff0ae5bd0a3d81c6ccf756e6': 'xxxxxxxxxxxxx',
-	'Hm_lpvt_4233e74dff0ae5bd0a3d81c6ccf756e6': 'xxxxxxxxxxxxx',
-	'_ga': 'GA1.2.437277179',
-	'LGRID': 'xxxxxxxxxxxxx'
-}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://doc.scrapy.org/en/latest/topics/autothrottle.html
