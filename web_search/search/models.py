@@ -1,7 +1,4 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
-# Author: kris_peng
-# Created on 2019/2/18
+from django.db import models
 
 from datetime import datetime
 from elasticsearch_dsl import DocType, Date, Nested, Boolean, \
@@ -16,12 +13,13 @@ class CustomAnalyzer(_CustomAnalyzer):
     def get_analysis_definition(self):
         return {}
 
+
 ik_analyzer = CustomAnalyzer("ik_max_word", filter=["lowercase"])
 
 class ArticleType(DocType):
 
     # 伯乐在线文章类型
-    suggest = Completion(analyzer=ik_analyzer)
+    suggest = Completion(analyzer="ik_max_word")
     title = Text(analyzer="ik_max_word")
     create_date = Date()
     url = Keyword()
@@ -37,3 +35,4 @@ class ArticleType(DocType):
 
 if __name__ == "__main__":
     ArticleType.init()
+

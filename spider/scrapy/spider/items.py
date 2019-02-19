@@ -10,9 +10,11 @@ from scrapy.loader.processors import MapCompose, TakeFirst, Join
 from scrapy.loader import ItemLoader
 from models.es_types import ArticleType
 
+from elasticsearch_dsl.connections import connections
+es = connections.create_connection(ArticleType._doc_type.using)
+
 
 # 日期特殊处理 YYYY/MM/DD
-
 def date_convert(value):
     try:
         date_match = re.match("\d{4}/\d{2}/\d{2}", value.strip())
@@ -35,7 +37,6 @@ def remove_comment_tags(value):
     else:
         return value
 
-
 def get_nums(value):
     match_re = re.match(".*?(\d+).*", value)
     if match_re:
@@ -44,6 +45,24 @@ def get_nums(value):
         nums = 0
 
     return nums
+
+def gen_suggests(index, info_tuple):
+    #根据字符串生成搜索建议数组
+    used_words = set()
+    suggests = []
+    for text, weight in info_tuple:
+        if text:
+            #调用es的analyze接口分析字符串
+            words = es.indices.analyze(index=index, analyzer="ik_max_word", params={'filter':["lowercase"]}, body=text)
+            anylyzed_words = set([r["token"] for r in words["tokens"] if len(r["token"])>1])
+            new_words = anylyzed_words - used_words
+        else:
+            new_words = set()
+
+        if new_words:
+            suggests.append({"input":list(new_words), "weight":weight})
+
+    return suggests
 
 # 伯乐在线文章
 class JobBoleArticleItem(scrapy.Item):
@@ -85,7 +104,12 @@ class JobBoleArticleItem(scrapy.Item):
         article.fav_nums = self['fav_nums']
         article.praise_nums = self['praise_nums']
         article.comment_nums = self['comment_nums']
+
+        article.suggest = gen_suggests(ArticleType._doc_type.index, ((article.title, 10), (article.tags, 7)))
+
         article.save()
+
+        return
 
 
 class ArticleItemLoader(ItemLoader):
