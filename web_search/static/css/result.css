@@ -71,7 +71,7 @@ html{*overflow:auto;}
 .resultArea .resultList .itemFoot{color:#008000;}
 .resultArea .resultList .itemFoot .info{margin-right:10px;}
 
-.resultArea .pagination{margin-bottom:25px;padding-left:32px;}
+.resultArea .pagination{margin-bottom:25px;padding-left:32px;float:left}
 /*相关搜索*/
 .resultArea .dependSearch{margin-bottom:30px;padding-left:32px;font-size:14px;}
 .resultArea .dependSearch h6{float:left;margin-right:15px;font-weight:bold;}

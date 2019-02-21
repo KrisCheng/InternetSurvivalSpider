@@ -4,10 +4,9 @@ from django.views.generic.base import View
 from search.models import ArticleType
 from django.http import HttpResponse
 from elasticsearch import Elasticsearch
+from datetime import datetime
 
 client = Elasticsearch(hosts=["127.0.0.1"])
-
-# Create your views here.
 
 class SearchSuggest(View):
     def get(self, request):
@@ -28,8 +27,16 @@ class SearchSuggest(View):
         return HttpResponse(json.dumps(re_datas), content_type="application/json")
 
 class SearchView(View):
+
     def get(self, request):
-        key_words = request.GET.get('q', '')
+        key_words = request.GET.get('q','')
+        page = request.GET.get("p", "1")
+        try:
+            page = int(page)
+        except:
+            page = 1
+
+        start_time = datetime.now()
         response = client.search(
             index = "jobbole",
             body = {
@@ -39,7 +46,7 @@ class SearchView(View):
                         "fields": ["tags", "title", "content"]
                     }
                 },
-                "from": 0,
+                "from": (page-1)*10,
                 "size": 10,
                 "highlight": {
                     "pre_tags": ['<span class="keyWord">'],
@@ -52,6 +59,8 @@ class SearchView(View):
             }
         )
 
+        end_time = datetime.now()
+        last_second = (end_time - start_time).total_seconds()
         total_nums = response["hits"]["total"]
         hit_list = []
 
@@ -61,17 +70,28 @@ class SearchView(View):
                 hit_dict["title"] = "".join(hit["highlight"]["title"])
             else:
                 hit_dict["title"] = hit["_source"]["title"]
-            if "content" in hit["highlight"]:
-                hit_dict["content"] = "".join(hit["highlight"]["content"])[:500]
-            else:
-                hit_dict["content"] = hit["_source"]["content"][:500]
 
+            # TODO 内容快照显示
+            # if "content" in hit["highlight"]:
+            #     hit_dict["content"] = "".join(hit["highlight"]["content"])[:600]
+            # else:
+            # hit_dict["content"] = hit["_source"]["content"][:300]
+            # reg = re.compile('<[^>]*>')
+            # hit_dict["content"] = reg.sub('', hit_dict["content"]).replace('\n', '').replace(' ', '')
+            hit_dict["content"] = ""
             hit_dict["create_date"] = hit["_source"]["create_date"]
             hit_dict["url"] = hit["_source"]["url"]
             hit_dict["score"] = hit["_score"]
-
             hit_list.append(hit_dict)
 
+            if(total_nums%10) > 0:
+                page_nums = int(total_nums/10) + 1
+            else:
+                page_nums = total_nums / 10
 
-        return render(request, "result.html", {"all_hits": hit_list,
-                                               "key_words": key_words})
+        return render(request, "result.html", {"page":  page,
+                                               "all_hits": hit_list,
+                                               "key_words": key_words,
+                                               "total_nums": total_nums,
+                                               "page_nums": page_nums,
+                                               "last_second": last_second})
