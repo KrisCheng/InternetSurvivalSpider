@@ -80,7 +80,7 @@ def crawl_jobs(positionName):
                                          each_item['companyName'], each_item['companyFullName']])
                         # print(each_item)
                     print('crawling page %d done...' % i)
-                    time.sleep(random.randint(3, 10))
+                    time.sleep(random.randint(5, 15))
                 else:
                     break
             except Exception as exp:

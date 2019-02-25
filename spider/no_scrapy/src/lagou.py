@@ -96,7 +96,7 @@ def main(url, para):
         return None
 
 def main_task():
-    kdList = [u'java']
+    kdList = [u'CEO']
     cityList = [u'上海']
     url = 'https://www.lagou.com/jobs/positionAjax.json'
     for city in cityList:

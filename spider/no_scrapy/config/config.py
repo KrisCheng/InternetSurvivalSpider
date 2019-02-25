@@ -4,7 +4,7 @@
 # Created on 23/12/2018
 
 # JOB_LIST_DONE = ["CTO","技术总监","算法工程师","数据挖掘","自然语言处理","区块链","后端工程师"]
-JOB_LIST_TODO = ["产品总监"]
+JOB_LIST_TODO = ["CEO"]
 
 MYSQL_DATABASE_URI = "mysql+pymysql://root:pengcheng00@localhost:3306/spider?charset=utf8" 
 
