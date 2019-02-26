@@ -4,13 +4,14 @@
 # Created on 23/12/2018
 
 # JOB_LIST = ["产品实习生", "算法实习生", "前端实习生", "后端实习生", "数据挖掘实习生", "机器学习实习生"]
-JOB_LIST = ["深度学习实习"]
-CITY_LIST = ["上海"]
+JOB_LIST = ["产品实习生"]
+CITY_LIST = ["杭州"]
 
 MIN_SLEEP_TIME = 5
 MAX_SLEEP_TIME = 7
+REQUEST_TIMEOUT = 10
 
-MLAGOU_HEADERS = {
+M_JOB_LAGOU_HEADERS = {
     'Accept': 'application/json',
     'Accept-Encoding': 'gzip, deflate, br',
     'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
@@ -24,15 +25,28 @@ MLAGOU_HEADERS = {
     'Referrer Policy': 'no-referrer-when-downgrade',
 }
 
+M_COMPANY_LAGOU_HEADERS = {
+    'Accept': 'application/json, text/javascript, */*; q=0.01',
+    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+    'Host': 'www.lagou.com',
+    'Origin': 'https://www.lagou.com',
+    'Referer': 'https://www.lagou.com/gongsi/0-0-0?havemark=0',
+    'User-Agent': 'Mozilla/5.0 (iPad; CPU OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 '
+                  'Mobile/13B143 Safari/601.1'
+}
+
 MYSQL_DATABASE_URI = "mysql+pymysql://root:pengcheng00@localhost:3306/spider?charset=utf8" 
 
+
+# PROXIES = None
+
 # 阿布云代理ip
-proxyHost = "http-pro.abuyun.com"
-proxyPort = "9010"
+proxyHost = "http-dyn.abuyun.com"
+proxyPort = "9020"
 
 # 代理隧道验证信息
-proxyUser = "H8J2L7T1K1E1522P"
-proxyPass = "2D0DD039ACBF6D0F"
+proxyUser = "HHG25398WF7B78OD"
+proxyPass = "D09F902CB15499A9"
 
 proxyMeta = "http://%(user)s:%(pass)s@%(host)s:%(port)s" % {
   "host" : proxyHost,
@@ -41,7 +55,7 @@ proxyMeta = "http://%(user)s:%(pass)s@%(host)s:%(port)s" % {
   "pass" : proxyPass,
 }
 
-proxies = {
+PROXIES = {
     "http"  : proxyMeta,
     "https" : proxyMeta,
 }

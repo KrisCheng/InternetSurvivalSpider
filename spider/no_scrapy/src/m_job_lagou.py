@@ -16,14 +16,6 @@ from urllib import parse as parse
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
 
-def mkdirs_if_not_exists(directory_):
-    """
-    create a new folder if it does not exist
-    """
-    if not os.path.exists(directory_) or not os.path.isdir(directory_):
-        os.makedirs(directory_)
-
-
 def get_max_pageNo(positionName, cityName):
     """
     return the max page number of a specific city_job
@@ -31,7 +23,7 @@ def get_max_pageNo(positionName, cityName):
     request_url = 'https://m.lagou.com/search.json?city='+parse.quote(cityName)+'&positionName=' + parse.quote(
         positionName) + '&pageNo=1&pageSize=15'
 
-    response = requests.get(request_url, proxies=proxies, headers=MLAGOU_HEADERS, cookies=init_cookies(), timeout=10)
+    response = requests.get(request_url, proxies=PROXIES, headers=M_JOB_LAGOU_HEADERS, cookies=init_cookies(), timeout=REQUEST_TIMEOUT)
 
     print("Getting data from %s successfully. URL: " % positionName + request_url)
 
@@ -51,7 +43,7 @@ def init_cookies():
     return the cookies after your first visit
     """
     url = 'https://m.lagou.com/search.html'
-    response = requests.get(url, headers=MLAGOU_HEADERS, timeout=10, proxies=proxies)
+    response = requests.get(url, headers=M_JOB_LAGOU_HEADERS, timeout=REQUEST_TIMEOUT, proxies=PROXIES)
     return response.cookies
 
 
@@ -69,7 +61,7 @@ def crawl_jobs(positionName, cityName):
         request_url = 'https://m.lagou.com/search.json?city='+parse.quote(cityName)+'&positionName='+parse.quote(
             positionName)+'&pageNo=' + str(i)+'&pageSize=15'
 
-        response = requests.get(request_url, cookies=init_cookies(), headers=MLAGOU_HEADERS, proxies=proxies)
+        response = requests.get(request_url, cookies=init_cookies(), headers=M_JOB_LAGOU_HEADERS, proxies=PROXIES)
         if response.status_code == 200:
             try:
                 items = response.json()['content']['data']['page']['result']

@@ -6,9 +6,11 @@
 import random
 import time
 import os
-from src import m_lagou
 import requests
 from bs4 import BeautifulSoup
+from src import m_job_lagou
+from config.config import *
+from util.util import *
 import pandas as pd
 
 
@@ -21,15 +23,6 @@ def crawl_company(havemark=0):
     COMPANY_LIST = list()
 
     req_url = 'https://www.lagou.com/gongsi/0-0-0.json?havemark=%d' % havemark
-    headers = {
-        'Accept': 'application/json, text/javascript, */*; q=0.01',
-        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-        'Host': 'www.lagou.com',
-        'Origin': 'https://www.lagou.com',
-        'Referer': 'https://www.lagou.com/gongsi/0-0-0?havemark=0',
-        'User-Agent': 'Mozilla/5.0 (iPad; CPU OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 '
-                      'Mobile/13B143 Safari/601.1'
-    }
 
     for pn in range(20):
         params = {
@@ -39,11 +32,9 @@ def crawl_company(havemark=0):
             'havemark': str(havemark)
         }
 
-        response = requests.post(req_url, headers=headers, params=params, cookies=m_lagou.init_cookies(),
-                                 timeout=10, )
-
+        response = requests.post(req_url, headers=M_COMPANY_LAGOU_HEADERS, params=params, cookies=m_job_lagou.init_cookies(),
+                                 timeout=REQUEST_TIMEOUT, proxies=PROXIES)
         print(response.url)
-
         if response.status_code == 200:
             company_list_per_page = response.json()['result']
             for company in company_list_per_page:
@@ -64,14 +55,8 @@ def crawl_company(havemark=0):
 def crawl_company_stage(company_id):
 
     req_url = 'https://m.lagou.com/gongsi/%s.html' % str(company_id)
-    headers = {
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
-        'Host': 'm.lagou.com',
-        'Referer': 'https://m.lagou.com',
-        'Upgrade-Insecure-Requests': '1',
-        'User-Agent': 'Mozilla/5.0 (iPad; CPU OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'
-    }
-    response = requests.get(req_url, headers=headers, cookies=m_lagou.init_cookies(), timeout=20)
+
+    response = requests.get(req_url, headers=M_COMPANY_LAGOU_HEADERS, cookies=m_lagou.init_cookies(), proxies=PROXIES, timeout=REQUEST_TIMEOUT)
 
     print(response.status_code)
     if response.status_code == 200:
@@ -91,6 +76,7 @@ def crawl_company_stage(company_id):
 
 
 def main_task():
+
     company_level_list = list()
     visited_company_id_list = list()
     count = 0
