@@ -10,9 +10,10 @@ import sys
 import time
 import pandas as pd
 import requests
+import random
 from config.config import *
 from urllib import parse as parse
-from random import random
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
 
 def mkdirs_if_not_exists(directory_):
@@ -49,18 +50,8 @@ def init_cookies():
     """
     return the cookies after your first visit
     """
-    headers = {
-        'Upgrade-Insecure-Requests': '1',
-        'Host': 'm.lagou.com',
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
-        'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1',
-        'DNT': '1',
-        'Cache-Control': 'max-age=0',
-        'Referrer Policy': 'no-referrer-when-downgrade',
-    }
     url = 'https://m.lagou.com/search.html'
-
-    response = requests.get(url, headers=headers, timeout=10, proxies=proxies)
+    response = requests.get(url, headers=MLAGOU_HEADERS, timeout=10, proxies=proxies)
     return response.cookies
 
 
@@ -79,15 +70,16 @@ def crawl_jobs(positionName, cityName):
             positionName)+'&pageNo=' + str(i)+'&pageSize=15'
 
         response = requests.get(request_url, cookies=init_cookies(), headers=MLAGOU_HEADERS, proxies=proxies)
-
         if response.status_code == 200:
             try:
                 items = response.json()['content']['data']['page']['result']
+                time.sleep(random.randint(MIN_SLEEP_TIME, MAX_SLEEP_TIME))
                 if len(items) > 0:
                     for each_item in items:
                         if "今天" in each_item['createTime']:
                             each_item['createTime'] = re.sub("今天.*", str(datetime.date.today()),
                                                              each_item['createTime'])
+
                         elif "昨天" in each_item['createTime']:
                             today = datetime.date.today()
                             oneday = datetime.timedelta(days=1)
@@ -97,11 +89,9 @@ def crawl_jobs(positionName, cityName):
                         JOB_DATA.append([each_item['positionId'], each_item['positionName'], each_item['city'],
                                          each_item['createTime'], each_item['salary'], each_item['companyId'],
                                          each_item['companyName'], each_item['companyFullName']])
-                        print('crawling page %d done...' % i)
-                        time.sleep(random.randint(SLEEP_TIME, SLEEP_TIME+1))
+                    print('crawling page %d done...' % i)
             except:
                 print('Invalid request is found by Lagou...')
-                pass
         elif response.status_code == 403:
             print('request is forbidden by the server...')
         else:

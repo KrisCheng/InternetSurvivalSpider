@@ -9,8 +9,9 @@ import requests
 from config.config import *
 
 # 要访问的目标页面
-targetUrl = "https://m.lagou.com/search.html"
-resp = requests.get(targetUrl, proxies=proxies)
+request_url = "https://m.lagou.com/search.html"
+response = requests.get(request_url, headers=MLAGOU_HEADERS, timeout=10, proxies=proxies)
+response = requests.get(request_url, proxies=proxies, headers=MLAGOU_HEADERS, cookies=response.cookies, timeout=10)
+print(response.status_code)
 
-print(resp.status_code)
 # print(resp.text)

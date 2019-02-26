@@ -7,5 +7,6 @@ from src import m_lagou, company_lagou
 
 if __name__ == '__main__':
 
-    m_lagou.main_task() # 拉勾移动端
+    m_lagou.main_task() # 移动端拉勾职位信息
+
     # company_lagou.main_task()

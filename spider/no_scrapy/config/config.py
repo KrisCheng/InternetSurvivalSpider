@@ -3,12 +3,12 @@
 # Author: kris_peng
 # Created on 23/12/2018
 
-JOB_LIST = ["机器学习实习生"]
+# JOB_LIST = ["产品实习生", "算法实习生", "前端实习生", "后端实习生", "数据挖掘实习生", "机器学习实习生"]
+JOB_LIST = ["深度学习实习"]
 CITY_LIST = ["上海"]
 
-# JOB_LIST_TODO = ["CTO","技术总监", "算法工程师", "数据挖掘", "自然语言处理", "区块链", "后端工程师"]
-
-SLEEP_TIME = 5
+MIN_SLEEP_TIME = 5
+MAX_SLEEP_TIME = 7
 
 MLAGOU_HEADERS = {
     'Accept': 'application/json',
@@ -45,5 +45,3 @@ proxies = {
     "http"  : proxyMeta,
     "https" : proxyMeta,
 }
-
-# proxies = None # 不使用代理

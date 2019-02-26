@@ -11,26 +11,6 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 
-# 阿布云代理服务器
-proxyHost = "http-cla.abuyun.com"
-proxyPort = "9030"
-
-# 代理隧道验证信息
-proxyUser = "H4GI861V84NVE9CC"
-proxyPass = "32E97AB53781A5BF"
-
-proxyMeta = "http://%(user)s:%(pass)s@%(host)s:%(port)s" % {
-    "host": proxyHost,
-    "port": proxyPort,
-    "user": proxyUser,
-    "pass": proxyPass,
-}
-
-proxies = {
-    "http": proxyMeta,
-    "https": proxyMeta,
-}
-
 
 def crawl_company(havemark=0):
     """
@@ -93,7 +73,6 @@ def crawl_company_stage(company_id):
     }
     response = requests.get(req_url, headers=headers, cookies=m_lagou.init_cookies(), timeout=20)
 
-    # print(response.url)
     print(response.status_code)
     if response.status_code == 200:
         soup = BeautifulSoup(response.text, 'html5lib')
