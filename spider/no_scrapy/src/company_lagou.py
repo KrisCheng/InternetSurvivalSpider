@@ -5,14 +5,32 @@
 
 import random
 import time
-
-from config import config
 import os
 from src import m_lagou
-
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
+
+# 阿布云代理服务器
+proxyHost = "http-cla.abuyun.com"
+proxyPort = "9030"
+
+# 代理隧道验证信息
+proxyUser = "H4GI861V84NVE9CC"
+proxyPass = "32E97AB53781A5BF"
+
+proxyMeta = "http://%(user)s:%(pass)s@%(host)s:%(port)s" % {
+    "host": proxyHost,
+    "port": proxyPort,
+    "user": proxyUser,
+    "pass": proxyPass,
+}
+
+proxies = {
+    "http": proxyMeta,
+    "https": proxyMeta,
+}
+
 
 def crawl_company(havemark=0):
     """
@@ -42,8 +60,10 @@ def crawl_company(havemark=0):
         }
 
         response = requests.post(req_url, headers=headers, params=params, cookies=m_lagou.init_cookies(),
-                                 timeout=10)
+                                 timeout=10, )
+
         print(response.url)
+
         if response.status_code == 200:
             company_list_per_page = response.json()['result']
             for company in company_list_per_page:
@@ -56,12 +76,13 @@ def crawl_company(havemark=0):
             print('403 forbidden...')
         else:
             print(response.status_code)
-        time.sleep(random.randint(5, 10))
+        time.sleep(random.randint(5, 7))
 
     return COMPANY_LIST
 
 
 def crawl_company_stage(company_id):
+
     req_url = 'https://m.lagou.com/gongsi/%s.html' % str(company_id)
     headers = {
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
@@ -71,7 +92,9 @@ def crawl_company_stage(company_id):
         'User-Agent': 'Mozilla/5.0 (iPad; CPU OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'
     }
     response = requests.get(req_url, headers=headers, cookies=m_lagou.init_cookies(), timeout=20)
-    print(response.url)
+
+    # print(response.url)
+    print(response.status_code)
     if response.status_code == 200:
         soup = BeautifulSoup(response.text, 'html5lib')
         company_desc = soup.find_all(class_="desc")[0].get_text().strip()
@@ -83,7 +106,7 @@ def crawl_company_stage(company_id):
         print('403 forbidden...')
     else:
         print(response.status_code)
-    time.sleep(random.randint(3, 6))
+    time.sleep(random.randint(2, 5))
 
     return [company_id, industryField, financeStage, staffNum]
 
@@ -91,10 +114,13 @@ def crawl_company_stage(company_id):
 def main_task():
     company_level_list = list()
     visited_company_id_list = list()
+    count = 0
     for job in os.listdir('./data'):
         for company_id in pd.read_excel(os.path.join('./data', job))['公司编码']:
-            if not company_id in visited_company_id_list:
+            if not company_id in visited_company_id_list and count < 3:
                 try:
+                    count = count + 1
+                    print(count)
                     company = crawl_company_stage(company_id)
                     company_level_list.append(company)
                     visited_company_id_list.append(company_id)

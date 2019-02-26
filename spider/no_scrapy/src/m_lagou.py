@@ -5,16 +5,45 @@
 
 import datetime
 import os
-import random
 import re
 import sys
 import time
 import pandas as pd
-from config.config import *
-
 import requests
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
+from config.config import *
 from urllib import parse as parse
+from random import random
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
+
+def mkdirs_if_not_exists(directory_):
+    """
+    create a new folder if it does not exist
+    """
+    if not os.path.exists(directory_) or not os.path.isdir(directory_):
+        os.makedirs(directory_)
+
+
+def get_max_pageNo(positionName, cityName):
+    """
+    return the max page number of a specific city_job
+    """
+    request_url = 'https://m.lagou.com/search.json?city='+parse.quote(cityName)+'&positionName=' + parse.quote(
+        positionName) + '&pageNo=1&pageSize=15'
+
+    response = requests.get(request_url, proxies=proxies, headers=MLAGOU_HEADERS, cookies=init_cookies(), timeout=10)
+
+    print("Getting data from %s successfully. URL: " % positionName + request_url)
+
+    if response.status_code == 200:
+        max_page_no = int(int(response.json()['content']['data']['page']['totalCount']) / 15 + 1)
+        return max_page_no
+    elif response.status_code == 403:
+        print('request is forbidden by the server...')
+        return 0
+    else:
+        print(response.status_code)
+        return 0
+
 
 def init_cookies():
     """
@@ -30,36 +59,26 @@ def init_cookies():
         'Referrer Policy': 'no-referrer-when-downgrade',
     }
     url = 'https://m.lagou.com/search.html'
-    response = requests.get(url, headers=headers, timeout=10)
 
+    response = requests.get(url, headers=headers, timeout=10, proxies=proxies)
     return response.cookies
 
-def crawl_jobs(positionName):
+
+def crawl_jobs(positionName, cityName):
     """
     crawl the job info from lagou H5 web pages
     """
     JOB_DATA = list()
-    max_page_number = get_max_pageNo(positionName)
 
-    cookie = init_cookies()
+    max_page_number = get_max_pageNo(positionName, cityName)
 
-    for i in range(1, max_page_number + 1):
-        request_url = 'https://m.lagou.com/search.json?city=%E5%85%A8%E5%9B%BD&positionName=' + parse.quote(
-            positionName) + '&pageNo=' + str(i) + '&pageSize=15'
-        headers = {
-            'Accept': 'application/json',
-            'Accept-Encoding': 'gzip, deflate, br',
-            'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
-            'Host': 'm.lagou.com',
-            'DNT': '1',
-            'Referer': 'https://m.lagou.com/search.html',
-            'User-Agent': 'Mozilla/5.0 (iPad; CPU OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 '
-                      'Mobile/13B143 Safari/601.1',
-            'X-Requested-With': 'XMLHttpRequest',
-            'Connection': 'keep-alive',
-            'Referrer Policy': 'no-referrer-when-downgrade',
-        }
-        response = requests.get(request_url, headers=headers, cookies=cookie)
+    print("%s, %s. There are %s pages, approximately %s records in total."%(positionName, cityName, max_page_number, max_page_number * 15))
+
+    for i in range(1, max_page_number+1):
+        request_url = 'https://m.lagou.com/search.json?city='+parse.quote(cityName)+'&positionName='+parse.quote(
+            positionName)+'&pageNo=' + str(i)+'&pageSize=15'
+
+        response = requests.get(request_url, cookies=init_cookies(), headers=MLAGOU_HEADERS, proxies=proxies)
 
         if response.status_code == 200:
             try:
@@ -78,12 +97,9 @@ def crawl_jobs(positionName):
                         JOB_DATA.append([each_item['positionId'], each_item['positionName'], each_item['city'],
                                          each_item['createTime'], each_item['salary'], each_item['companyId'],
                                          each_item['companyName'], each_item['companyFullName']])
-                        # print(each_item)
-                    print('crawling page %d done...' % i)
-                    time.sleep(random.randint(5, 15))
-                else:
-                    break
-            except Exception as exp:
+                        print('crawling page %d done...' % i)
+                        time.sleep(random.randint(SLEEP_TIME, SLEEP_TIME+1))
+            except:
                 print('Invalid request is found by Lagou...')
                 pass
         elif response.status_code == 403:
@@ -93,55 +109,23 @@ def crawl_jobs(positionName):
 
     return JOB_DATA
 
-def get_max_pageNo(positionName):
-    """
-    return the max page number of a specific job
-    """
-    request_url = 'https://m.lagou.com/search.json?city=%E4%B8%8A%E6%B5%B7&positionName=' + parse.quote(
-        positionName) + '&pageNo=1&pageSize=15'
-    headers = {
-        'Accept': 'application/json',
-        'Accept-Encoding': 'gzip, deflate, sdch',
-        'Host': 'm.lagou.com',
-        'Referer': 'https://m.lagou.com/search.html',
-        'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 8_0 like Mac OS X) AppleWebKit/600.1.3 (KHTML, like Gecko) '
-                      'Version/8.0 Mobile/12A4345d Safari/600.1.4',
-        'X-Requested-With': 'XMLHttpRequest',
-        'Connection': 'keep-alive'
-    }
-    response = requests.get(request_url, headers=headers, cookies=init_cookies(), timeout=10)
-    print("Getting data from %s successfully. URL: " % positionName + request_url)
-    if response.status_code == 200:
-        max_page_no = int(int(response.json()['content']['data']['page']['totalCount']) / 15 + 1)
-        return max_page_no
-    elif response.status_code == 403:
-        print('request is forbidden by the server...')
-        return 0
-    else:
-        print(response.status_code)
-        return 0
-
-def mkdirs_if_not_exists(directory_):
-    """
-    create a new folder if it does not exist
-    """
-    if not os.path.exists(directory_) or not os.path.isdir(directory_):
-        os.makedirs(directory_)
 
 def main_task():
-    craw_job_list = JOB_LIST_TODO
-    for _ in craw_job_list:
-        joblist = crawl_jobs(_)
-        col = [
-            u'职位编码',
-            u'职位名称',
-            u'所在城市',
-            u'发布日期',
-            u'薪资待遇',
-            u'公司编码',
-            u'公司名称',
-            u'公司全称']
-        df = pd.DataFrame(joblist, columns=col)
-        dir = "./data/"
-        mkdirs_if_not_exists(dir)
-        df.to_excel(os.path.join(dir, _ + "_mlagou.xlsx"), sheet_name=_, index=False)
+    craw_job_list = JOB_LIST
+    craw_city_list = CITY_LIST
+    for job in craw_job_list:
+        for city in craw_city_list:
+            joblist = crawl_jobs(job, city)
+            col = [
+                u'职位编码',
+                u'职位名称',
+                u'所在城市',
+                u'发布日期',
+                u'薪资待遇',
+                u'公司编码',
+                u'公司名称',
+                u'公司全称']
+            df = pd.DataFrame(joblist, columns=col)
+            dir = "./data/"
+            mkdirs_if_not_exists(dir)
+            df.to_excel(os.path.join(dir, city+"_"+job+"_mlagou.xlsx"), sheet_name=city+"_"+job, index=False)

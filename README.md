@@ -2,7 +2,7 @@
 
 ### Introduction
 
-a spider project to collect, analysis Internet related information (jobs, articles, questions), including the spider, data analysis and web visualization.
+a spider project to collect, analysis Internet related information (jobs, articles, questions), including the spider, data analysis and web visualization with basic search engine.
 
 ### Usage
 
