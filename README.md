@@ -37,7 +37,6 @@ deactivate
 ├── README.md                                       Please READ ME FIRST!!!
 ├── requirements.txt                                package dependencies.
 ├── web-search                                      web visulization(including search engine).
-├── analysis                                        data analysis.
 └── spider           
     ├── scrapy                                      spider with scrapy.
     └── no scrapy                                   spider without scrapy.
