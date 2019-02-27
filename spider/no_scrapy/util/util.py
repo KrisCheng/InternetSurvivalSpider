@@ -25,5 +25,4 @@ def file_list_end_with(file_end, base_file_path = DATA_BASE_PATH):
 
 def fetch_all_jobrelation(session):
     return session.query(JobRelation) \
-    .filter(JobRelation.id > 360) \
     .all()

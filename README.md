@@ -43,11 +43,15 @@ deactivate
     └── no scrapy                                   spider without scrapy.
 ```
 
+### Todo
+
+[] 拉勾公司以及面试信息
+[] 数据分析和可视化展示
+
 
 ### Reference
 
 * [LagouSpider](https://github.com/nnngu/LagouSpider)
 * [LagouJob](https://github.com/lucasxlu/LagouJob)
 * [Python分布式爬虫打造搜索引擎](http://coding.imooc.com/class/92.html)
-* 
 
