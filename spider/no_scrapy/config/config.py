@@ -4,7 +4,7 @@
 # Created on 23/12/2018
 
 # JOB_LIST = ["产品实习生", "算法实习生", "前端实习生", "后端实习生", "数据挖掘实习生", "机器学习实习生"]
-JOB_LIST = ["算法"]
+JOB_LIST = ["PHP", "区块链"]
 CITY_LIST = ["上海"]
 
 MIN_SLEEP_TIME = 40
@@ -36,11 +36,8 @@ M_COMPANY_LAGOU_HEADERS = {
 }
 
 MYSQL_DATABASE_URI = "mysql+pymysql://root:pengcheng00@localhost:3306/web_spider?charset=utf8"
+
 DATA_BASE_PATH = "./data"
-
-
-# PROXIES = None
-
 
 # 阿布云代理ip
 proxyHost = "http-pro.abuyun.com"
@@ -61,3 +58,5 @@ PROXIES = {
     "http"  : proxyMeta,
     "https" : proxyMeta,
 }
+
+# PROXIES = None

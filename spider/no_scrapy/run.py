@@ -8,8 +8,10 @@ from db import job_relation_db
 
 if __name__ == '__main__':
 
-    # m_job_lagou.main_task() # 移动端拉勾职位信息
-    # m_job_details_lagou.main_task()  # 移动端拉勾职位信息
+    # m_job_lagou.main_task() # 移动端拉勾职位基本信息
+
+    m_job_details_lagou.main_task()  # 移动端拉勾职位详情信息
+
     # company_lagou.main_task()
 
-    job_relation_db.main_task()
+    # job_relation_db.main_task()

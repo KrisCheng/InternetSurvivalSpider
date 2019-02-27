@@ -44,13 +44,14 @@ def main_task():
             list.append(dict)
 
     all_job_relation = fetch_all_jobrelation(session=session)
-    jobcode_list = []
+    exist_jobcode_list = []
     for job_code in all_job_relation:
-        jobcode_list.append(job_code.job_code)
+        exist_jobcode_list.append(job_code.job_code)
+    current_jobcode_list = []
 
     for job_item in list:
         try:
-            if job_item["职位编码"] in jobcode_list:
+            if job_item["职位编码"] in exist_jobcode_list or job_item["职位编码"] in current_jobcode_list:
                 continue
             data_result = JobRelation(
                 job_code = job_item["职位编码"],
@@ -63,6 +64,7 @@ def main_task():
                 company_full_name = job_item["公司全称"],
                 data_source = "Lagou")
             session.add(data_result)
+            current_jobcode_list.append(job_item["职位编码"])
 
         except:
             print("Lagou Import ERROR.")

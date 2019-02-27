@@ -3,116 +3,119 @@
 # Author: kris_peng
 # Created on 2019/2/26
 
+import os
+import random
+
 import requests
-import math
+from bs4 import BeautifulSoup
 import pandas as pd
 import time
 from config.config import *
 from util.util import *
+from datetime import datetime
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
+JOB_DETAIL_DIR = './data/job_detail/'
+
 
 def init_cookies():
     """
     return the cookies after your first visit
     """
-    my_headers = {
-        'Host': 'www.lagou.com',
-        'Connection': 'keep-alive',
-        'Content-Length': '23',
-        'Origin': 'https://www.lagou.com',
-        'X-Anit-Forge-Code': '0',
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36',
-        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-        'Accept': 'application/json, text/javascript, */*; q=0.01',
-        'X-Requested-With': 'XMLHttpRequest',
-        'X-Anit-Forge-Token': 'None',
-        'Referer': 'https://www.lagou.com/jobs/list_java?city=%E5%B9%BF%E5%B7%9E&cl=false&fromSearch=true&labelWords=&suginput=',
-        'Accept-Encoding': 'gzip, deflate, br',
-        'Accept-Language': 'en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7'
-    }
-    url = 'https://www.lagou.com'
-    response = requests.get(url, headers=my_headers, timeout=REQUEST_TIMEOUT, proxies=PROXIES)
+    url = 'https://m.lagou.com/search.html'
+    response = requests.get(url, headers=M_JOB_LAGOU_HEADERS, timeout=REQUEST_TIMEOUT, proxies=PROXIES)
     return response.cookies
 
+def crawl_job_detail(positionId, positionName):
+    """
+    get the detailed job description of the position
+    """
+    request_url = 'https://m.lagou.com/jobs/' + str(positionId) + '.html'
 
-def get_json(url,num):
-   '''''从网页获取JSON,使用POST请求,加上头部信息'''
-   my_headers = {
-       'Host': 'www.lagou.com',
-       'Connection': 'keep-alive',
-       'Content-Length': '23',
-       'Origin': 'https://www.lagou.com',
-       'X-Anit-Forge-Code': '0',
-       'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36',
-       'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-       'Accept': 'application/json, text/javascript, */*; q=0.01',
-       'X-Requested-With': 'XMLHttpRequest',
-       'X-Anit-Forge-Token': 'None',
-       'Referer': 'https://www.lagou.com/jobs/list_java?city=%E5%B9%BF%E5%B7%9E&cl=false&fromSearch=true&labelWords=&suginput=',
-       'Accept-Encoding': 'gzip, deflate, br',
-       'Accept-Language': 'en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7'
-           }
+    headers = {
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+        'Accept-Encoding': 'gzip, deflate, sdch',
+        'Accept-Language': 'zh-CN,zh;q=0.8',
+        'Host': 'm.lagou.com',
+        'Upgrade-Insecure-Requests': '1',
+        'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 8_0 like Mac OS X) AppleWebKit/600.1.3 (KHTML, like Gecko) Version/8.0 Mobile/12A4345d Safari/600.1.4'
+    }
 
-   my_data = {
-           'first': 'true',
-           'pn':num,
-           'kd':'数据分析'}
+    response = requests.get(request_url, headers=headers, timeout=10, cookies=init_cookies(), proxies=PROXIES)
 
-   res = requests.post(url, headers = my_headers, cookies=init_cookies(), data = my_data, proxies=PROXIES)
-   res.raise_for_status()
-   res.encoding = 'utf-8'
-   # 得到包含职位信息的字典
-   page = res.json()
-   return page
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.text, 'html5lib')
+        items = soup.find('div', class_='items')
+        jobnature = items.find('span', class_='item jobnature').span.text.strip()
+        workyear = items.find('span', class_='item workyear').span.text.strip()
+        education = items.find('span', class_='item education').span.text.strip()
+        jd = soup.find_all('div', class_='content')[0].get_text().strip().replace('\n', '').replace('&nbps;', '')  # jd
+
+    elif response.status_code == 403:
+        print('request is forbidden by the server...')
+    else:
+        print(response.status_code)
+    return [positionId, positionName, jobnature, workyear, education, jd]
 
 
-def get_page_num(count):
-   '''''计算要抓取的页数'''
-   # 每页15个职位,向上取整
-   res = math.ceil(count/15)
-   # 拉勾网最多显示30页结果
-   if res > 30:
-       return 30
-   else:
-       return res
-
-def get_page_info(jobs_list):
-   '''''对一个网页的职位信息进行解析,返回列表'''
-   page_info_list = []
-   for i in jobs_list:
-       job_info = []
-       job_info.append(i['companyFullName'])
-       job_info.append(i['companyShortName'])
-       job_info.append(i['companySize'])
-       job_info.append(i['financeStage'])
-       job_info.append(i['district'])
-       job_info.append(i['positionName'])
-       job_info.append(i['workYear'])
-       job_info.append(i['education'])
-       job_info.append(i['salary'])
-       job_info.append(i['positionAdvantage'])
-       page_info_list.append(job_info)
-   return page_info_list
+def write_job_details_to_txt(positionId, text, parent_dir_name):
+    """
+    write the job details text into text file
+    """
+    details_dir = JOB_DETAIL_DIR + parent_dir_name + os.path.sep
+    mkdirs_if_not_exists(details_dir)
+    try:
+        f = open(details_dir + str(positionId) + '.txt', mode='w', encoding='UTF-8')
+    except:
+        import io
+        f = io.open(details_dir + str(positionId) + '.txt', mode='w', encoding='UTF-8')
+    finally:
+        f.write(text)
+        f.flush()
+        f.close()
 
 def main_task():
-   url = 'https://www.lagou.com/jobs/positionAjax.json?city=%E6%B7%B1%E5%9C%B3&needAddtionalResult=false'
-    # 先设定页数为1,获取总的职位数
-   page_1 = get_json(url,1)
-   total_count = page_1['content']['positionResult']['totalCount']
-   num = get_page_num(total_count)
-   total_info = []
-   time.sleep(20)
-   print('职位总数:{},页数:{}'.format(total_count,num))
 
-   for n in range(1,num+1):
-       # 对每个网页读取JSON, 获取每页数据
-       page = get_json(url,n)
-       jobs_list = page['content']['positionResult']['result']
-       page_info = get_page_info(jobs_list)
-       total_info += page_info
-       print('已经抓取第{}页, 职位总数:{}'.format(n, len(total_info)))
-       # 每次抓取完成后,暂停一会,防止被服务器拉黑
-       time.sleep(30)
-   #将总数据转化为data frame再输出
-   df = pd.DataFrame(data = total_info,columns = ['公司全名','公司简称','公司规模','融资阶段','区域','职位名称','工作经验','学历要求','工资','职位福利'])
-   df.to_csv('lagou_jobs.csv',index = False)
-   print('已保存为csv文件.')
+    engine = create_engine(MYSQL_DATABASE_URI)
+    DBSession = sessionmaker(bind=engine)
+    session = DBSession()
+    all_job_relation = fetch_all_jobrelation(session=session)
+    jobrelation_list = []
+    for job_relation in all_job_relation:
+        dict = {}
+        dict["id"] = job_relation.id
+        dict["job_code"] = job_relation.job_code
+        dict["job_name"] = job_relation.job_name
+        jobrelation_list.append(dict)
+    session.close()
+    print('Total: %s ' % len(jobrelation_list))
+    jd_item_list = []
+    invalid_count = 0
+    count = 0
+    for jobrelation in jobrelation_list:
+
+        if invalid_count < 200:
+            positionId = jobrelation["job_code"]
+            positionName = jobrelation["job_name"]
+            count = count + 1
+            print('%s / %s' % (count, len(jobrelation_list)))
+            try:
+                jd_item = crawl_job_detail(positionId, positionName)
+                jd_item_list.append(jd_item)
+                print('%s has been written successfully...' % positionId)
+            except:
+                invalid_count = invalid_count + 1
+                time.sleep(random.randint(30, 60))
+                print('%s failed.' % positionId)
+    col = [
+        u'职位编码',
+        u'职位类型',
+        u'工作性质',
+        u'工作经验',
+        u'教育程度',
+        u'详情描述']
+    df = pd.DataFrame(jd_item_list, columns=col)
+    mkdirs_if_not_exists(JOB_DETAIL_DIR)
+    df.to_excel(os.path.join(JOB_DETAIL_DIR, datetime.now().strftime("%Y-%m-%d")+"_job_details.xlsx"), sheet_name="job_details", index=False,
+                encoding='UTF-8')
