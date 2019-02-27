@@ -44,13 +44,10 @@ deactivate
 ```
 
 
-### TODO
-
-
 ### Reference
 
 * [LagouSpider](https://github.com/nnngu/LagouSpider)
 * [LagouJob](https://github.com/lucasxlu/LagouJob)
-* [100 offer 互联网人才流动报告](https://cn.100offer.com/resources)
 * [Python分布式爬虫打造搜索引擎](http://coding.imooc.com/class/92.html)
+* 
 

@@ -4,12 +4,12 @@
 # Created on 23/12/2018
 
 # JOB_LIST = ["产品实习生", "算法实习生", "前端实习生", "后端实习生", "数据挖掘实习生", "机器学习实习生"]
-JOB_LIST = ["产品实习生"]
-CITY_LIST = ["杭州"]
+JOB_LIST = ["算法"]
+CITY_LIST = ["上海"]
 
-MIN_SLEEP_TIME = 5
-MAX_SLEEP_TIME = 7
-REQUEST_TIMEOUT = 10
+MIN_SLEEP_TIME = 40
+MAX_SLEEP_TIME = 50
+REQUEST_TIMEOUT = 20
 
 M_JOB_LAGOU_HEADERS = {
     'Accept': 'application/json',
@@ -35,18 +35,20 @@ M_COMPANY_LAGOU_HEADERS = {
                   'Mobile/13B143 Safari/601.1'
 }
 
-MYSQL_DATABASE_URI = "mysql+pymysql://root:pengcheng00@localhost:3306/spider?charset=utf8" 
+MYSQL_DATABASE_URI = "mysql+pymysql://root:pengcheng00@localhost:3306/web_spider?charset=utf8"
+DATA_BASE_PATH = "./data"
 
 
 # PROXIES = None
 
+
 # 阿布云代理ip
-proxyHost = "http-dyn.abuyun.com"
-proxyPort = "9020"
+proxyHost = "http-pro.abuyun.com"
+proxyPort = "9010"
 
 # 代理隧道验证信息
-proxyUser = "HHG25398WF7B78OD"
-proxyPass = "D09F902CB15499A9"
+proxyUser = "H2A639621I80T86P"
+proxyPass = "E9EB6E34BAD7C44A"
 
 proxyMeta = "http://%(user)s:%(pass)s@%(host)s:%(port)s" % {
   "host" : proxyHost,

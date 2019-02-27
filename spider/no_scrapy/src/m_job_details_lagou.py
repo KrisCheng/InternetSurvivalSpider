@@ -8,16 +8,48 @@ import math
 import pandas as pd
 import time
 from config.config import *
+from util.util import *
+
+def init_cookies():
+    """
+    return the cookies after your first visit
+    """
+    my_headers = {
+        'Host': 'www.lagou.com',
+        'Connection': 'keep-alive',
+        'Content-Length': '23',
+        'Origin': 'https://www.lagou.com',
+        'X-Anit-Forge-Code': '0',
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36',
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        'Accept': 'application/json, text/javascript, */*; q=0.01',
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-Anit-Forge-Token': 'None',
+        'Referer': 'https://www.lagou.com/jobs/list_java?city=%E5%B9%BF%E5%B7%9E&cl=false&fromSearch=true&labelWords=&suginput=',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Accept-Language': 'en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7'
+    }
+    url = 'https://www.lagou.com'
+    response = requests.get(url, headers=my_headers, timeout=REQUEST_TIMEOUT, proxies=PROXIES)
+    return response.cookies
+
 
 def get_json(url,num):
    '''''从网页获取JSON,使用POST请求,加上头部信息'''
    my_headers = {
-           'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36',
-            'Host':'www.lagou.com',
-           'Referer':'https://www.lagou.com/jobs/list_%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90?labelWords=&fromSearch=true&suginput=',
-            'X-Anit-Forge-Code':'0',
-           'X-Anit-Forge-Token': 'None',
-           'X-Requested-With':'XMLHttpRequest'
+       'Host': 'www.lagou.com',
+       'Connection': 'keep-alive',
+       'Content-Length': '23',
+       'Origin': 'https://www.lagou.com',
+       'X-Anit-Forge-Code': '0',
+       'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36',
+       'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+       'Accept': 'application/json, text/javascript, */*; q=0.01',
+       'X-Requested-With': 'XMLHttpRequest',
+       'X-Anit-Forge-Token': 'None',
+       'Referer': 'https://www.lagou.com/jobs/list_java?city=%E5%B9%BF%E5%B7%9E&cl=false&fromSearch=true&labelWords=&suginput=',
+       'Accept-Encoding': 'gzip, deflate, br',
+       'Accept-Language': 'en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7'
            }
 
    my_data = {
@@ -25,7 +57,7 @@ def get_json(url,num):
            'pn':num,
            'kd':'数据分析'}
 
-   res = requests.post(url, headers = my_headers, data = my_data,proxies=PROXIES)
+   res = requests.post(url, headers = my_headers, cookies=init_cookies(), data = my_data, proxies=PROXIES)
    res.raise_for_status()
    res.encoding = 'utf-8'
    # 得到包含职位信息的字典

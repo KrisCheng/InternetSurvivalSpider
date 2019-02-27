@@ -12,6 +12,7 @@ import pandas as pd
 import requests
 import random
 from config.config import *
+from util.util import *
 from urllib import parse as parse
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
@@ -23,11 +24,12 @@ def get_max_pageNo(positionName, cityName):
     request_url = 'https://m.lagou.com/search.json?city='+parse.quote(cityName)+'&positionName=' + parse.quote(
         positionName) + '&pageNo=1&pageSize=15'
 
-    response = requests.get(request_url, proxies=PROXIES, headers=M_JOB_LAGOU_HEADERS, cookies=init_cookies(), timeout=REQUEST_TIMEOUT)
+    response = requests.post(request_url, proxies=PROXIES, headers=M_JOB_LAGOU_HEADERS, cookies=init_cookies(), timeout=REQUEST_TIMEOUT)
 
     print("Getting data from %s successfully. URL: " % positionName + request_url)
 
     if response.status_code == 200:
+        tmp = response.json()
         max_page_no = int(int(response.json()['content']['data']['page']['totalCount']) / 15 + 1)
         return max_page_no
     elif response.status_code == 403:
@@ -61,7 +63,7 @@ def crawl_jobs(positionName, cityName):
         request_url = 'https://m.lagou.com/search.json?city='+parse.quote(cityName)+'&positionName='+parse.quote(
             positionName)+'&pageNo=' + str(i)+'&pageSize=15'
 
-        response = requests.get(request_url, cookies=init_cookies(), headers=M_JOB_LAGOU_HEADERS, proxies=PROXIES)
+        response = requests.post(request_url, cookies=init_cookies(), headers=M_JOB_LAGOU_HEADERS, proxies=PROXIES, timeout=REQUEST_TIMEOUT)
         if response.status_code == 200:
             try:
                 items = response.json()['content']['data']['page']['result']
