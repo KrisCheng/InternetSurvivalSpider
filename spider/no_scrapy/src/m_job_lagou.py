@@ -67,7 +67,6 @@ def crawl_jobs(positionName, cityName):
             response = requests.post(request_url, cookies=init_cookies(), headers=M_JOB_LAGOU_HEADERS, proxies=PROXIES, timeout=REQUEST_TIMEOUT)
             if response.status_code == 200:
                     items = response.json()['content']['data']['page']['result']
-                    # time.sleep(random.randint(MIN_SLEEP_TIME, MAX_SLEEP_TIME))
                     if len(items) > 0:
                         for each_item in items:
                             if "今天" in each_item['createTime']:
@@ -83,10 +82,10 @@ def crawl_jobs(positionName, cityName):
                             JOB_DATA.append([each_item['positionId'], each_item['positionName'], each_item['city'],
                                              each_item['createTime'], each_item['salary'], each_item['companyId'],
                                              each_item['companyName'], each_item['companyFullName']])
-                        print('crawling page %d done...' % i)
+                        print('crawling page %d / %d done...' % (i, max_page_number+1))
         except:
-            time.sleep(random.randint(30, 60))
-            print('Invalid request is found by Lagou...')
+            # time.sleep(random.randint(5, 15))
+            print('%d / %d . Invalid request is found by Lagou...' % (i, max_page_number+1))
 
     return JOB_DATA
 

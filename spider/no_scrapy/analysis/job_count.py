@@ -12,7 +12,6 @@ from sqlalchemy.orm import sessionmaker
 from config.config import *
 from util.util import *
 
-# get data directory (using getcwd() is needed to support running example in generated IPython notebook)
 d = path.dirname(__file__) if "__file__" in locals() else os.getcwd()
 
 def main_task():
@@ -25,12 +24,14 @@ def main_task():
 
     for job_relation in all_job_relation:
         job_info = job_info + " " + str(job_relation.job_name).strip()
+    # print(job_info)
 
     session.close()
 
     # Generate a word cloud image
     wordcloud = WordCloud(
                 font_path='/Users/chengpeng/Desktop/workspace/my_project/InternetSurvivalSpider/spider/no_scrapy/analysis/SourceHanSerifK-Light.otf',
+                repeat=False,
                 background_color='white',
                 scale=15,
                 ).generate(job_info)

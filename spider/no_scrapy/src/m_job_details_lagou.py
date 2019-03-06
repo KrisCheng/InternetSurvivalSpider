@@ -5,7 +5,6 @@
 
 import os
 import random
-
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
@@ -16,7 +15,7 @@ from datetime import datetime
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-JOB_DETAIL_DIR = './data/job_detail/'
+JOB_DETAIL_DIR = './data/'
 
 
 def init_cookies():
@@ -80,6 +79,7 @@ def main_task():
     engine = create_engine(MYSQL_DATABASE_URI)
     DBSession = sessionmaker(bind=engine)
     session = DBSession()
+
     all_job_relation = fetch_all_jobrelation(session=session)
     jobrelation_list = []
     for job_relation in all_job_relation:
@@ -88,26 +88,23 @@ def main_task():
         dict["job_code"] = job_relation.job_code
         dict["job_name"] = job_relation.job_name
         jobrelation_list.append(dict)
+
     session.close()
     print('Total: %s ' % len(jobrelation_list))
     jd_item_list = []
-    invalid_count = 0
     count = 0
     for jobrelation in jobrelation_list:
 
-        if invalid_count < 200:
-            positionId = jobrelation["job_code"]
-            positionName = jobrelation["job_name"]
-            count = count + 1
-            print('%s / %s' % (count, len(jobrelation_list)))
-            try:
-                jd_item = crawl_job_detail(positionId, positionName)
-                jd_item_list.append(jd_item)
-                print('%s has been written successfully...' % positionId)
-            except:
-                invalid_count = invalid_count + 1
-                time.sleep(random.randint(30, 60))
-                print('%s failed.' % positionId)
+        positionId = jobrelation["job_code"]
+        positionName = jobrelation["job_name"]
+        count = count + 1
+        try:
+            jd_item = crawl_job_detail(positionId, positionName)
+            jd_item_list.append(jd_item)
+            print('%d / %d . %s has been written successfully...' % (count, len(jobrelation_list), positionId))
+        except:
+            # time.sleep(random.randint(30, 60))
+            print('%d / %d . %s failed.' % (count, len(jobrelation_list), positionId))
     col = [
         u'职位编码',
         u'职位类型',

@@ -6,9 +6,11 @@
 import os, fnmatch
 from config.config import *
 from model.job_relation import JobRelation
+from model.job_requirement import JobRequirement
 
 
 # file util
+
 
 def mkdirs_if_not_exists(directory_):
     """
@@ -23,6 +25,11 @@ def file_list_end_with(file_end, base_file_path = DATA_BASE_PATH):
 
 # db util
 
+
 def fetch_all_jobrelation(session):
     return session.query(JobRelation) \
+    .all()
+
+def fetch_all_jobrequirement(session):
+    return session.query(JobRequirement) \
     .all()
