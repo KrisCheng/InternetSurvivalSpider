@@ -28,6 +28,7 @@ def file_list_end_with(file_end, base_file_path = DATA_BASE_PATH):
 
 def fetch_all_jobrelation(session):
     return session.query(JobRelation) \
+    .filter(JobRelation.id <= 5100) \
     .all()
 
 def fetch_all_jobrequirement(session):

@@ -12,13 +12,13 @@ if __name__ == '__main__':
     # 数据爬取
     # m_job_lagou.main_task() # h5拉勾职位基本信息
     # m_job_details_lagou.main_task()  # h5拉勾职位详情信息
-    # company_lagou.main_task()
+    # company_lagou.main_task() # 公司信息
 
 
     # 数据入库
     # job_relation_db.main_task()
-    job_requirement_db.main_task()
+    # job_requirement_db.main_task()
 
 
     # 数据分析
-    # job_count.main_task()
+    job_count.main_task()

@@ -29,11 +29,13 @@ M_JOB_LAGOU_HEADERS = {
 M_COMPANY_LAGOU_HEADERS = {
     'Accept': 'application/json, text/javascript, */*; q=0.01',
     'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-    'Host': 'www.lagou.com',
-    'Origin': 'https://www.lagou.com',
+    'Host': 'm.lagou.com',
     'Referer': 'https://www.lagou.com/gongsi/0-0-0?havemark=0',
     'User-Agent': 'Mozilla/5.0 (iPad; CPU OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 '
-                  'Mobile/13B143 Safari/601.1'
+                  'Mobile/13B143 Safari/601.1',
+    'X-Requested-With': 'XMLHttpRequest',
+    'Connection': 'keep-alive',
+    'Referrer Policy': 'no-referrer-when-downgrade',
 }
 
 MYSQL_DATABASE_URI = "mysql+pymysql://root:pengcheng00@localhost:3306/web_spider?charset=utf8"

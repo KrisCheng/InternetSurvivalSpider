@@ -12,6 +12,8 @@ from src import m_job_lagou
 from config.config import *
 from util.util import *
 import pandas as pd
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
 
 def crawl_company(havemark=0):
@@ -32,7 +34,7 @@ def crawl_company(havemark=0):
             'havemark': str(havemark)
         }
 
-        response = requests.post(req_url, headers=M_COMPANY_LAGOU_HEADERS, params=params, cookies=m_job_lagou.init_cookies(),
+        response = requests.post(req_url, headers=M_JOB_LAGOU_HEADERS, params=params, cookies=m_job_lagou.init_cookies(),
                                  timeout=REQUEST_TIMEOUT, proxies=PROXIES)
         print(response.url)
         if response.status_code == 200:
@@ -42,7 +44,7 @@ def crawl_company(havemark=0):
                                      company['city'], company['companyFeatures'],
                                      company['companyFullName'], company['financeStage'], company['industryField'],
                                      company['interviewRemarkNum'], company['positionNum'], company['processRate']])
-            print('page %d has been crawled down~' % (pn + 1))
+            print('page %d has been crawled down.' % (pn + 1))
         elif response.status_code == 403:
             print('403 forbidden...')
         else:
@@ -55,9 +57,8 @@ def crawl_company(havemark=0):
 def crawl_company_stage(company_id):
 
     req_url = 'https://m.lagou.com/gongsi/%s.html' % str(company_id)
-
-    response = requests.get(req_url, headers=M_COMPANY_LAGOU_HEADERS, cookies=m_lagou.init_cookies(), proxies=PROXIES, timeout=REQUEST_TIMEOUT)
-
+    # TODO
+    response = requests.get(req_url, headers=M_JOB_LAGOU_HEADERS, cookies=m_lagou.init_cookies(), proxies=PROXIES, timeout=REQUEST_TIMEOUT)
     print(response.status_code)
     if response.status_code == 200:
         soup = BeautifulSoup(response.text, 'html5lib')
@@ -70,31 +71,45 @@ def crawl_company_stage(company_id):
         print('403 forbidden...')
     else:
         print(response.status_code)
-    time.sleep(random.randint(2, 5))
+    # time.sleep(random.randint(2, 5))
 
     return [company_id, industryField, financeStage, staffNum]
 
 
 def main_task():
 
+    engine = create_engine(MYSQL_DATABASE_URI)
+    DBSession = sessionmaker(bind=engine)
+    session = DBSession()
+
+    all_job_relation = fetch_all_jobrelation(session=session)
+
+    jobrelation_list = []
+    for job_relation in all_job_relation:
+        dict = {}
+        dict["id"] = job_relation.id
+        dict["company_code"] = job_relation.company_code
+        jobrelation_list.append(dict)
+
     company_level_list = list()
     visited_company_id_list = list()
+
     count = 0
-    for job in os.listdir('./data'):
-        for company_id in pd.read_excel(os.path.join('./data', job))['公司编码']:
-            if not company_id in visited_company_id_list and count < 3:
-                try:
-                    count = count + 1
-                    print(count)
-                    company = crawl_company_stage(company_id)
-                    company_level_list.append(company)
-                    visited_company_id_list.append(company_id)
-                except:
-                    pass
-                finally:
-                    cols = [u'公司编码', u'所属行业', u'融资阶段', u'员工数量']
-                    df = pd.DataFrame(company_level_list, columns=cols)
-                    df.to_excel('./company.xlsx', 'Company', index=False)
-            else:
-                print('%d has been visited before...' % company_id)
+    for jobrelation in jobrelation_list:
+        if not jobrelation["company_code"] in visited_company_id_list:
+            try:
+                count = count + 1
+                company = crawl_company_stage(jobrelation["company_code"])
+                company_level_list.append(company)
+                visited_company_id_list.append(jobrelation["company_code"])
+                print('%d / %d . %s has been written successfully...' % (count, len(jobrelation_list), jobrelation["company_code"]))
+            except:
+                print('%d / %d . %s failed.' % (count, len(jobrelation_list), jobrelation["company_code"]))
+            finally:
+                cols = [u'公司编码', u'所属行业', u'融资阶段', u'员工数量']
+                df = pd.DataFrame(company_level_list, columns=cols)
+                df.to_excel('./data/company.xlsx', 'Company', index=False)
+        else:
+            print('%d has been visited before...' % jobrelation["company_code"])
+
     print('Processing done!')
