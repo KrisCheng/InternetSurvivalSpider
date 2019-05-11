@@ -4,7 +4,7 @@
 # Created on 23/12/2018
 
 from src import m_job_lagou, company_lagou, m_job_details_lagou
-from db import job_relation_db, job_requirement_db
+from db import job_relation_db, job_requirement_db, company_db
 from analysis import job_count
 
 if __name__ == '__main__':
@@ -18,7 +18,8 @@ if __name__ == '__main__':
     # 数据入库
     # job_relation_db.main_task()
     # job_requirement_db.main_task()
+    company_db.main_task()
 
 
     # 数据分析
-    job_count.main_task()
+    # job_count.main_task()

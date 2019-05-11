@@ -32,7 +32,9 @@ def main_task():
     wordcloud = WordCloud(
                 font_path='/Users/chengpeng/Desktop/workspace/my_project/InternetSurvivalSpider/spider/no_scrapy/analysis/SourceHanSerifK-Light.otf',
                 repeat=False,
-                background_color='white',
+                width=400,
+                height=200,
+                background_color='black',
                 scale=15,
                 ).generate(job_info)
 
